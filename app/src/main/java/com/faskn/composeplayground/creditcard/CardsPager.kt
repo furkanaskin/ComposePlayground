@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.faskn.composeplayground.R
+import com.faskn.composeplayground.ui.theme.*
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -59,27 +60,25 @@ fun CardCollapsingPagerScreen(paddingValues: PaddingValues) {
             subtitle = "Clean. Minimal. All you need.",
             frontDrawable = R.drawable.mask_visa_front,
             backDrawable = R.drawable.mask_visa_back,
-            accentColor = Color(0xD9FFFFFF)
+            accentColor = White800
         ), CardData(
             title = "Ocean Blue",
             subtitle = "Fresh energy in every transaction.",
             frontDrawable = R.drawable.mask_visa_front,
             backDrawable = R.drawable.mask_visa_back,
-            accentColor = Color(0xD94CDBFF)
+            accentColor = Blue200
         ), CardData(
             title = "Rainbow",
             subtitle = "Rare by design, yours by choice.",
             frontDrawable = R.drawable.mask_visa_front,
             backDrawable = R.drawable.mask_visa_back,
-            accentColor = Color(0xFFFF00FF).copy(alpha = 0.12f),
+            accentColor = Magenta100.copy(alpha = 0.12f),
             isChromatic = true
         )
     )
 
     val pagerState = rememberPagerState(pageCount = { cards.size }, initialPage = 0)
-
     val currentPage = pagerState.settledPage
-
     val coroutineScope = rememberCoroutineScope()
 
     val animatedAccentColor by animateColorAsState(
@@ -95,8 +94,8 @@ fun CardCollapsingPagerScreen(paddingValues: PaddingValues) {
                 brush = Brush.radialGradient(
                     colors = listOf(
                         animatedAccentColor,
-                        Color(0xFF252525),
-                        Color(0xFF000000),
+                        Black700,
+                        Black900,
                     ), center = Offset.Zero, radius = 2400f
                 )
             )
@@ -191,7 +190,7 @@ fun CardCollapsingPagerScreen(paddingValues: PaddingValues) {
         ) {
             Text(
                 text = "Touch to explore",
-                color = Color.White.copy(alpha = 0.6f),
+                color = TransparentWhite600,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp)
@@ -232,14 +231,14 @@ fun CardCollapsingPagerScreen(paddingValues: PaddingValues) {
                                 modifier = Modifier
                                     .size(46.dp)
                                     .border(
-                                        width = 2.dp, color = Color(0xFFB2FF59), shape = CircleShape
+                                        width = 2.dp, color = Green300, shape = CircleShape
                                     )
                             )
                         }
 
                         Box(
                             modifier = Modifier.size(38.dp).align(Alignment.Center)
-                                .clip(CircleShape).background(Color.White).run {
+                                .clip(CircleShape).background(White800).run {
                                     if (card.isChromatic) background(
                                         brush = Brush.linearGradient(
                                             chromaticColors
@@ -260,9 +259,9 @@ fun CardCollapsingPagerScreen(paddingValues: PaddingValues) {
                 .height(56.dp),
             shape = RoundedCornerShape(50.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.LightGray.copy(alpha = 0.1f), contentColor = Color.White
+                containerColor = TransparentGray100, contentColor = White800
             ),
-            border = BorderStroke(width = 1.dp, color = Color.White.copy(alpha = 0.2f)),
+            border = BorderStroke(width = 1.dp, color = TransparentWhite200),
             contentPadding = PaddingValues()
         ) {
 
@@ -271,7 +270,7 @@ fun CardCollapsingPagerScreen(paddingValues: PaddingValues) {
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold,
                 ),
-                color = Color.White,
+                color = White800,
             )
         }
 
