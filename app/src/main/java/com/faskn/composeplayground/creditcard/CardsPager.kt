@@ -6,8 +6,8 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -71,14 +71,15 @@ fun CardCollapsingPagerScreen(paddingValues: PaddingValues) {
             subtitle = "Rare by design, yours by choice.",
             frontDrawable = R.drawable.mask_visa_front,
             backDrawable = R.drawable.mask_visa_back,
-            accentColor = Color(0xFFD6E7E4),
+            accentColor = Color(0xFFFF00FF).copy(alpha = 0.12f),
             isChromatic = true
         )
     )
 
-    val pagerState = rememberPagerState(
-        pageCount = { cards.size }, initialPage = 0
-    )
+    val pagerState = rememberPagerState(pageCount = { cards.size }, initialPage = 0)
+
+    val currentPage = pagerState.settledPage
+
     val coroutineScope = rememberCoroutineScope()
 
     val animatedAccentColor by animateColorAsState(
@@ -86,8 +87,6 @@ fun CardCollapsingPagerScreen(paddingValues: PaddingValues) {
         animationSpec = tween(durationMillis = 600),
         label = "accentColor"
     )
-
-    val currentPage = pagerState.currentPage
 
     Column(
         modifier = Modifier
@@ -117,7 +116,7 @@ fun CardCollapsingPagerScreen(paddingValues: PaddingValues) {
             ) {
                 AnimatedContent(
                     targetState = currentPage, transitionSpec = {
-                        slideInHorizontally(tween(500)) togetherWith slideOutHorizontally(tween(0))
+                        slideInHorizontally(tween(500)) togetherWith fadeOut()
                     }, label = "Card Title Animation"
                 ) { page ->
                     Text(
@@ -133,9 +132,7 @@ fun CardCollapsingPagerScreen(paddingValues: PaddingValues) {
 
                 AnimatedContent(
                     targetState = currentPage, transitionSpec = {
-                        fadeIn(tween(700, delayMillis = 500)) togetherWith slideOutHorizontally(
-                            tween(0)
-                        )
+                        fadeIn(tween(700, delayMillis = 500)) togetherWith fadeOut()
                     }, label = "Card Subtitle Animation"
                 ) { page ->
                     Text(

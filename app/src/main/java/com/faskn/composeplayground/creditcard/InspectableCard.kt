@@ -37,6 +37,11 @@ val chromaticColors = listOf(
     Color.Transparent
 )
 
+val partialChromaticColors = listOf(
+    Color(0xFF00FFFF).copy(alpha = 0.12f), // Cyan
+    Color.Transparent, Color(0xFFFF00FF).copy(alpha = 0.12f)
+)
+
 @Composable
 fun InspectableCard(
     modifier: Modifier = Modifier,
@@ -185,8 +190,11 @@ fun CardFace(
                     .matchParentSize()
                     .clip(shape = RoundedCornerShape(size = 20.dp))
             ) {
-                val gradientBrush = Brush.linearGradient(colors = chromaticColors)
-
+                val gradientBrush = Brush.linearGradient(
+                    colors = chromaticColors,
+                    start = Offset.Zero,
+                    end = Offset(x = size.width * 0.5f, y = size.height * 0.5f)
+                )
                 drawRect(
                     brush = gradientBrush, size = size, blendMode = BlendMode.Multiply
                 )
@@ -194,11 +202,7 @@ fun CardFace(
                 // Add secondary linear gradient for more dynamic effect
                 val angle = (touchX - 0.5f) * 3.14f * 2f
                 val gradientBrush2 = Brush.linearGradient(
-                    colors = listOf(
-                        Color(0xFF00FFFF).copy(alpha = 0.12f), // Cyan
-                        Color.Transparent,
-                        Color(0xFFFF00FF).copy(alpha = 0.12f), // Magenta
-                    ), start = Offset(
+                    colors = partialChromaticColors, start = Offset(
                         x = size.width * touchX - cos(angle) * size.width * 0.5f,
                         y = size.height * touchY - sin(angle) * size.height * 0.5f
                     ), end = Offset(
