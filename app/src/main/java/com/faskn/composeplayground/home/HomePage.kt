@@ -11,6 +11,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -65,21 +67,22 @@ fun HomePage(
             )
         }
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        LazyColumn {
             items(tutorials) { tutorial ->
                 Card(
                     onClick = { onTutorialClick(tutorial.screen) },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = Black700,
-                        contentColor = White900
+                        containerColor = Black900.copy(alpha = 0.50f),
+                        contentColor = Color.Transparent
                     ),
-                    border = BorderStroke(2.dp, Black500),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 20.dp)
+                    border = BorderStroke(
+                        2.dp, Brush.linearGradient(colors = listOf(Black500, Black700))
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
                 ) {
                     Column(
                         modifier = Modifier.padding(20.dp)
