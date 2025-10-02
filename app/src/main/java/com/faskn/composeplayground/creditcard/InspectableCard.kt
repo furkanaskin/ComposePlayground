@@ -25,21 +25,23 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.faskn.composeplayground.R
+import com.faskn.composeplayground.ui.theme.*
 import kotlin.collections.listOf
 import kotlin.math.cos
 import kotlin.math.sin
 
 val chromaticColors = listOf(
-    Color(0xFFFF00FF).copy(alpha = 0.12f), // Magenta
-    Color(0xFF00FFFF).copy(alpha = 0.12f), // Cyan
-    Color(0xFFFFFF00).copy(alpha = 0.12f), // Yellow
-    Color(0xFFFF6B9D).copy(alpha = 0.12f), // Pink
+    Magenta100.copy(alpha = 0.12f),
+    Cyan100.copy(alpha = 0.12f),
+    Yellow100.copy(alpha = 0.12f),
+    Pink100.copy(alpha = 0.12f),
     Color.Transparent
 )
 
 val partialChromaticColors = listOf(
-    Color(0xFF00FFFF).copy(alpha = 0.12f), // Cyan
-    Color.Transparent, Color(0xFFFF00FF).copy(alpha = 0.12f)
+    Cyan100.copy(alpha = 0.12f),
+    Color.Transparent,
+    Magenta100.copy(alpha = 0.12f)
 )
 
 @Composable
