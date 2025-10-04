@@ -39,6 +39,11 @@ fun HomePage(
             title = "Credit Card Selection Animation",
             description = "Interactive credit card selection with drag gestures.",
             screen = Screen.CreditCard
+        ),
+        Tutorial(
+            title = "3D Product Viewer (Experimental)",
+            description = "Product list and detail screens with 3D models and camera animations.",
+            screen = Screen.ProductList
         )
     )
 
