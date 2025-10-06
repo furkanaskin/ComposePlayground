@@ -82,7 +82,7 @@ uniform float time, baseHue, L1, L2, S1, S2;
  * - Two arms connected together
  * - Arm1: rotates around center (length=L1, speed=S1)
  * - Arm2: attached to end of Arm1 (length=L2, speed=S2) 
- * - We draw at the end of Arm2
+ * - We draw at the tip of Arm2
  * 
  * Trail effect:
  * - Draw 180 points from past to present
@@ -101,7 +101,7 @@ half3 hsv2rgb(half3 hsv) {
     return hsv.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), hsv.y);
 }
 
-// Rotate a vector efficiently
+// Rotate a vector by given cosine and sine values
 float2 rotateVector(float2 vector, float cosAngle, float sinAngle) {
     return float2(
         cosAngle * vector.x - sinAngle * vector.y,
