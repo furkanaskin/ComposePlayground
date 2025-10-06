@@ -1,5 +1,7 @@
 package com.faskn.composeplayground.navigation
 
+import com.faskn.composeplayground.navigation.Routes.PRODUCT_LIST
+
 object Routes {
     const val HOME = "home"
     const val CREDIT_CARD = "credit_card"
@@ -10,8 +12,9 @@ object Routes {
 sealed class Screen(val route: String) {
     data object Home : Screen(Routes.HOME)
     data object CreditCard : Screen(Routes.CREDIT_CARD)
-    data object ProductList : Screen(Routes.PRODUCT_LIST)
+    data object ProductList : Screen(PRODUCT_LIST)
     data object ProductDetail : Screen(Routes.PRODUCT_DETAIL) {
         fun createRoute(productId: Int) = "product_detail/$productId"
     }
+    data object AGSLSample : Screen("agsl_sample")
 }

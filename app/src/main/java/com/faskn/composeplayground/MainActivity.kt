@@ -5,7 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
@@ -13,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.faskn.composeplayground.agsl.AGSLSampleScreen
 import com.faskn.composeplayground.creditcard.CardCollapsingPagerScreen
 import com.faskn.composeplayground.home.HomePage
 import com.faskn.composeplayground.navigation.Screen
@@ -74,6 +76,10 @@ fun PlaygroundApp() {
                     navController = navController,
                     padding = innerPadding
                 )
+            }
+
+            composable(Screen.AGSLSample.route) {
+                AGSLSampleScreen()
             }
         }
     }
