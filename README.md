@@ -2,6 +2,25 @@
 
 A small Jetpack Compose playground showcasing modern UI/animation patterns with a sleek black theme in fullscreen.
 
+### 1. Credit Card Selection Animation
+
+Interactive credit card selection with smooth drag gestures and animations.
+
+https://github.com/user-attachments/assets/dbf47384-9cf7-4f52-81f0-688aec71285a
+
+### 2. 3D Product Viewer
+
+Product list and detail screens featuring 3D models with camera animations and interactive controls.
+
+https://github.com/user-attachments/assets/0145e6af-606b-4226-ae45-1aa1a791f0e5
+
+### 3. AGSL Sample - Spirograph
+
+Mathematical art creation using Android Graphics Shading Language (AGSL) with two rotating axes
+creating spirograph patterns.
+
+https://github.com/user-attachments/assets/e71144d3-5a68-4a57-90a9-330bc264a0a0
+
 ## Credits
 
 ### 3D Models
