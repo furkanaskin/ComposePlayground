@@ -7,6 +7,7 @@ object Routes {
     const val CREDIT_CARD = "credit_card"
     const val PRODUCT_LIST = "product_list"
     const val PRODUCT_DETAIL = "product_detail/{productId}"
+    const val CIRCULAR_CAROUSEL = "circular_carousel"
 }
 
 sealed class Screen(val route: String) {
@@ -17,4 +18,5 @@ sealed class Screen(val route: String) {
         fun createRoute(productId: Int) = "product_detail/$productId"
     }
     data object AGSLSample : Screen("agsl_sample")
+    data object CircularCarousel : Screen(Routes.CIRCULAR_CAROUSEL)
 }

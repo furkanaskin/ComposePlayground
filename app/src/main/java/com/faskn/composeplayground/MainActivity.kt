@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.faskn.composeplayground.agsl.AGSLSampleScreen
+import com.faskn.composeplayground.carousel.CircularCarouselScreen
 import com.faskn.composeplayground.creditcard.CardCollapsingPagerScreen
 import com.faskn.composeplayground.home.HomePage
 import com.faskn.composeplayground.navigation.Screen
@@ -80,6 +81,9 @@ fun PlaygroundApp() {
 
             composable(Screen.AGSLSample.route) {
                 AGSLSampleScreen()
+            }
+            composable(Screen.CircularCarousel.route) {
+                CircularCarouselScreen()
             }
         }
     }

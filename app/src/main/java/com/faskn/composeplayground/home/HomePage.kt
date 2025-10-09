@@ -63,6 +63,10 @@ fun HomePage(
             title = "AGSL Sample - Spirograph",
             description = "Drawing 2 rotating Axes like Spirograph using Android Graphics Shading Language (AGSL).",
             screen = Screen.AGSLSample
+        ), Tutorial(
+            title = "Circular Carousel",
+            description = "Simple horizontal color carousel using ViewPager.",
+            screen = Screen.CircularCarousel
         )
     )
 

@@ -2,6 +2,9 @@ package com.faskn.composeplayground.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val CarouselGradientEnd = Color(0xFF222327)
+val CarouselGradientStart = Color(0xFF0B0B0D)
+val TechBlack = Color(0xFF0B0B0D)
 val Black900 = Color(0xFF000000)
 val Black800 = Color(0xFF181818)
 val Black700 = Color(0xFF232526)
