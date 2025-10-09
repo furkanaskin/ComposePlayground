@@ -65,7 +65,7 @@ fun HomePage(
             screen = Screen.AGSLSample
         ), Tutorial(
             title = "Circular Carousel",
-            description = "Simple horizontal color carousel using ViewPager.",
+            description = "Circular carousel using LazyRow and graphicsLayer transformations.",
             screen = Screen.CircularCarousel
         )
     )
