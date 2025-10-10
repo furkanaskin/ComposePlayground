@@ -1,10 +1,7 @@
 package com.faskn.composeplayground.carousel
 
 import android.content.res.Configuration
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -12,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,8 +28,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.faskn.composeplayground.ui.theme.CarouselGradientEnd
 import com.faskn.composeplayground.ui.theme.CarouselGradientStart
@@ -65,7 +58,7 @@ fun CircularCarouselScreen() {
     var currentDeveloper by remember { mutableStateOf<ComposeDeveloper?>(null) }
     var centerItemIndex by rememberSaveable { mutableStateOf<Int?>(null) }
 
-    val snapTolerancePx = carouselConfig.itemSize.value.toInt()
+    val snapTolerancePx = carouselConfig.itemSize.value
     val snapToleranceRange = -snapTolerancePx..snapTolerancePx
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
@@ -79,7 +72,7 @@ fun CircularCarouselScreen() {
             .collect { layoutInfo ->
                 val visibleItems = layoutInfo.visibleItemsInfo
                 if (visibleItems.isNotEmpty()) {
-                    val centerItem = visibleItems.find { it.offset in snapToleranceRange }
+                    val centerItem = visibleItems.find { it.offset.toFloat() in snapToleranceRange }
                     centerItemIndex = centerItem?.index
 
                     centerItem?.let { item ->
@@ -134,6 +127,7 @@ fun CircularCarouselScreen() {
             totalItems = totalItems,
             startIndex = startIndex,
             itemSize = carouselConfig.itemSize,
+            visualItemSize = carouselConfig.visualItemSize,
             radiusPx = radiusPx,
             density = density
         )
@@ -151,7 +145,9 @@ fun CircularCarouselScreen() {
                         */
                         val halfOfScreen = screenDimensions.height.toPx() / 2f
                         val bottomPaddingPx =
-                            ((halfOfScreen) - (carouselConfig.radiusDp.toPx() * 2)).coerceAtLeast(0f)
+                            (halfOfScreen - (carouselConfig.visualItemSize.toPx().div(2)))
+                                .div(density.density)
+                                .coerceAtLeast(0f)
                         WindowInsets.safeGestures.asPaddingValues()
                             .calculateBottomPadding() + bottomPaddingPx.toDp()
                     }
@@ -164,38 +160,5 @@ fun CircularCarouselScreen() {
         }
 
         ActionButton(isPortrait)
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun CircularCarouselList(
-    lazyListState: LazyListState,
-    developers: List<ComposeDeveloper>,
-    totalItems: Int,
-    startIndex: Int,
-    itemSize: Dp,
-    radiusPx: Float,
-    density: Density
-) {
-    LazyRow(
-        state = lazyListState,
-        modifier = Modifier.fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState)
-    ) {
-        items(count = totalItems, key = { it }) { index ->
-            val actualIndex = (index - startIndex).mod(developers.size)
-            val developer = developers[actualIndex]
-
-            CarouselItem(
-                developer = developer,
-                lazyListState = lazyListState,
-                itemSize = itemSize,
-                radiusPx = radiusPx,
-                density = density
-            )
-        }
     }
 }

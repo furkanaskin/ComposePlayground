@@ -9,11 +9,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -27,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.faskn.composeplayground.ui.theme.TechBlack
 
 @Composable
 fun ReviewSection(
@@ -56,6 +60,10 @@ fun ReviewSection(
                 transitionSpec = { fadeIn() + slideInVertically() togetherWith slideOutVertically() + fadeOut() }
             ) { currentReviewer ->
                 Text(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .background(TechBlack.copy(alpha = 0.25f), CircleShape)
+                        .padding(10.dp),
                     text = currentReviewer?.review.orEmpty(),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 20.sp,

@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -21,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.faskn.composeplayground.ui.theme.AndroidGreen
 import com.faskn.composeplayground.ui.theme.CarouselGradientEnd
+import com.faskn.composeplayground.ui.theme.Green300
 
 // All paddings hardcoded for showcase purposes
 @Composable
@@ -44,7 +47,7 @@ fun BoxScope.HeaderText(isPortrait: Boolean) {
             .padding(
                 start = if (!isPortrait) 24.dp else 0.dp,
                 end = 24.dp,
-                top = if (isPortrait) 100.dp else 0.dp
+                top = if (isPortrait) 72.dp else 0.dp
             ),
         minLines = 2
     )
@@ -65,17 +68,18 @@ fun BoxScope.ActionButton(isPortrait: Boolean) {
             contentColor = Color.White
         ),
         contentPadding = ButtonDefaults.ContentPadding,
-        modifier = if (isPortrait) {
-            Modifier
-                .safeContentPadding()
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 120.dp)
-        } else {
-            Modifier
-                .safeContentPadding()
-                .align(Alignment.CenterEnd)
-                .padding(end = 24.dp)
-        }
+        modifier = Modifier
+            .safeContentPadding()
+            .align(if (isPortrait) Alignment.BottomCenter else Alignment.CenterEnd)
+            .padding(
+                end = if (!isPortrait) 24.dp else 0.dp
+            )
+            .dropShadow(
+                RoundedCornerShape(32.dp), Shadow(
+                    radius = 12.dp,
+                    color = Green300,
+                )
+            )
     ) {
         Text(
             text = "Get Started",

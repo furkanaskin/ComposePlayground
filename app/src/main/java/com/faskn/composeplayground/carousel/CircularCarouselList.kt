@@ -1,9 +1,13 @@
 package com.faskn.composeplayground.carousel
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,13 +29,49 @@ import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CircularCarouselList(
+    lazyListState: LazyListState,
+    developers: List<ComposeDeveloper>,
+    totalItems: Int,
+    startIndex: Int,
+    itemSize: Dp,
+    visualItemSize: Dp,
+    radiusPx: Float,
+    density: Density
+) {
+    LazyRow(
+        state = lazyListState,
+        modifier = Modifier.fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState)
+    ) {
+        items(count = totalItems, key = { it }) { index ->
+            val actualIndex = (index - startIndex).mod(developers.size)
+            val developer = developers[actualIndex]
+
+            CarouselItem(
+                developer = developer,
+                lazyListState = lazyListState,
+                itemSize = itemSize,
+                visualItemSize = visualItemSize,
+                radiusPx = radiusPx,
+                density = density
+            )
+        }
+    }
+}
+
 @Composable
 fun CarouselItem(
     developer: ComposeDeveloper,
     lazyListState: LazyListState,
     itemSize: Dp,
     radiusPx: Float,
-    density: Density
+    density: Density,
+    visualItemSize: Dp
 ) {
     var itemOffset by remember { mutableFloatStateOf(0f) }
     var itemWidth by remember { mutableFloatStateOf(0f) }
@@ -53,6 +93,12 @@ fun CarouselItem(
                 val pageOffsetFraction = distanceFromCenter / (itemWidth + density.density)
                 // Map offset to angle for circular effect
                 val angleRad = pageOffsetFraction * PI * 0.25f
+
+                // Normalize the visual size
+                val visualScale = visualItemSize / itemSize
+                scaleX = visualScale
+                scaleY = visualScale
+
                 // X: horizontal position on circle (sin)
                 translationX = (radiusPx * sin(angleRad)).toFloat()
                 // Y: vertical position on circle (1-cos)

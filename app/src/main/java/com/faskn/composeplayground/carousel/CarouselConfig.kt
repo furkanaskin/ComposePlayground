@@ -1,12 +1,14 @@
 package com.faskn.composeplayground.carousel
 
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.faskn.composeplayground.R
 
-const val ITEM_SIZE_MULTIPLIER = 0.33f
-const val MIN_ITEM_SIZE_DP = 120
+const val ITEM_SIZE_MULTIPLIER = 0.33333334f // 1/3 of screen width for LazyRow, don't change
+const val ITEM_PADDING_MULTIPLIER = 0.60f // 0.60f means ~40% padding from shortest edge
+const val ITEM_NORMALIZATION_MULTIPLIER = 3f
 const val RADIUS_MULTIPLIER = 0.75f
+const val VISUAL_ITEM_SIZE_MULTIPLIER =
+    ITEM_PADDING_MULTIPLIER * ITEM_SIZE_MULTIPLIER * ITEM_NORMALIZATION_MULTIPLIER
 
 enum class CarouselDirection { PREV, NEXT }
 
@@ -19,17 +21,25 @@ data class ScreenDimensions(
 
 data class CarouselConfig(
     val itemSize: Dp,
+    val visualItemSize: Dp,
+    val visualItemSizeNoPadding: Dp = visualItemSize / ITEM_PADDING_MULTIPLIER,
     val radiusDp: Dp
 ) {
     companion object {
         fun from(dimensions: ScreenDimensions): CarouselConfig {
-            // Screen width = 1x,
-            // itemSize = width * 0.33x,
-            // total = 3 items on screen
-            val itemSize = (dimensions.width * ITEM_SIZE_MULTIPLIER)
-                .coerceAtLeast(MIN_ITEM_SIZE_DP.dp)
+            // itemSize: LazyRow slot width for snap operations
+            val itemSize = dimensions.width * ITEM_SIZE_MULTIPLIER
+
+            // visualItemSize: actual display size with padding applied
+            val visualItemSize = dimensions.shortestEdge * VISUAL_ITEM_SIZE_MULTIPLIER
+
             val radiusDp = itemSize * RADIUS_MULTIPLIER
-            return CarouselConfig(itemSize, radiusDp)
+
+            return CarouselConfig(
+                itemSize = itemSize,
+                visualItemSize = visualItemSize,
+                radiusDp = radiusDp
+            )
         }
     }
 }
