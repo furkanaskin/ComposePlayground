@@ -1,6 +1,6 @@
 package com.faskn.composeplayground.carousel
 
-data class ComposeReviewer(
+data class ComposeDeveloper(
     val id: Int,
     val name: String,
     val profileImage: Int,

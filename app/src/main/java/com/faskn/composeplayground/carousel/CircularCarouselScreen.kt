@@ -1,5 +1,6 @@
 package com.faskn.composeplayground.carousel
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
-import androidx.compose.foundation.lazy.LazyListItemInfo
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -29,74 +30,79 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.center
 import androidx.compose.ui.unit.dp
 import com.faskn.composeplayground.ui.theme.CarouselGradientEnd
 import com.faskn.composeplayground.ui.theme.CarouselGradientStart
 import com.faskn.composeplayground.ui.theme.TechBlack
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CircularCarouselScreen() {
     val coroutineScope = rememberCoroutineScope()
-    val reviewers = getReviewers()
-    val configuration = LocalWindowInfo.current
+    val developers = getDevelopers()
+    val windowInfo = LocalWindowInfo.current
     val density = LocalDensity.current
+    val configuration = LocalConfiguration.current
 
-    val screenDimensions = remember(configuration, density) {
+    val screenDimensions = remember(windowInfo, density) {
         ScreenDimensions(
-            width = configuration.containerSize.width.dp / density.density,
-            height = configuration.containerSize.height.dp / density.density
+            width = windowInfo.containerSize.width.dp / density.density,
+            height = windowInfo.containerSize.height.dp / density.density
         )
     }
 
     val carouselConfig = remember(screenDimensions) { CarouselConfig.from(screenDimensions) }
-
     val radiusPx = with(density) { carouselConfig.radiusDp.toPx() }
     val totalItems = Int.MAX_VALUE
     val startIndex = totalItems / 2
 
     val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = startIndex)
-    var currentReviewer by remember { mutableStateOf<ComposeReviewer?>(null) }
-    var centerItem by remember { mutableStateOf<LazyListItemInfo?>(null) }
+    var currentDeveloper by remember { mutableStateOf<ComposeDeveloper?>(null) }
+    var centerItemIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+
+    val snapTolerancePx = carouselConfig.itemSize.value.toInt()
+    val snapToleranceRange = -snapTolerancePx..snapTolerancePx
+    val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
+    LaunchedEffect(configuration.orientation) {
+        // On orientation change, scroll to the center item to avoid misplacement
+        lazyListState.scrollToItem(index = centerItemIndex ?: startIndex)
+    }
 
     LaunchedEffect(Unit) {
-        snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo }
-            .collect { visibleItems ->
+        snapshotFlow { lazyListState.layoutInfo }
+            .collect { layoutInfo ->
+                val visibleItems = layoutInfo.visibleItemsInfo
                 if (visibleItems.isNotEmpty()) {
-                    centerItem =
-                        visibleItems.find { it.offset in 0..lazyListState.layoutInfo.viewportSize.center.x }
+                    val centerItem = visibleItems.find { it.offset in snapToleranceRange }
+                    centerItemIndex = centerItem?.index
 
                     centerItem?.let { item ->
                         val rawIndex = item.index - startIndex + 1
-                        val safeIndex =
-                            ((rawIndex % reviewers.size) + reviewers.size) % reviewers.size
-                        currentReviewer = reviewers[safeIndex]
+                        val safeIndex = rawIndex.mod(developers.size)
+                        currentDeveloper = developers[safeIndex]
                     }
                 }
             }
     }
 
     val handlePageDirection: (CarouselDirection) -> Unit = { direction ->
-        coroutineScope.launch {
-
-            centerItem?.let { item ->
-                val target = if (direction == CarouselDirection.NEXT) {
-                    item.index + 1
-                } else {
-                    item.index - 1
+        centerItemIndex?.let { index ->
+            coroutineScope.launch {
+                val target = when (direction) {
+                    CarouselDirection.NEXT -> index + 1
+                    CarouselDirection.PREV -> index - 1
                 }
 
                 lazyListState.animateScrollToItem(target)
             }
         }
     }
-
 
     Box(
         modifier = Modifier
@@ -118,12 +124,13 @@ fun CircularCarouselScreen() {
                     radius = circleSize / 2f,
                     center = Offset(centerX, centerY)
                 )
-            },
-        contentAlignment = Alignment.Center
+            }
     ) {
+        HeaderText(isPortrait)
+
         CircularCarouselList(
             lazyListState = lazyListState,
-            reviewers = reviewers,
+            developers = developers,
             totalItems = totalItems,
             startIndex = startIndex,
             itemSize = carouselConfig.itemSize,
@@ -137,6 +144,11 @@ fun CircularCarouselScreen() {
                 .fillMaxWidth()
                 .padding(
                     bottom = with(density) {
+                        /*
+                        * Place the review section below the carousel items
+                        * If there is not enough space, set it to zero
+                        * Use safe area insets for better UI
+                        */
                         val halfOfScreen = screenDimensions.height.toPx() / 2f
                         val bottomPaddingPx =
                             ((halfOfScreen) - (carouselConfig.radiusDp.toPx() * 2)).coerceAtLeast(0f)
@@ -146,10 +158,12 @@ fun CircularCarouselScreen() {
                 )
         ) {
             ReviewSection(
-                reviewer = currentReviewer,
-                onPageDirection = handlePageDirection
+                developer = currentDeveloper,
+                onNavigationEvent = handlePageDirection
             )
         }
+
+        ActionButton(isPortrait)
     }
 }
 
@@ -157,7 +171,7 @@ fun CircularCarouselScreen() {
 @Composable
 private fun CircularCarouselList(
     lazyListState: LazyListState,
-    reviewers: List<ComposeReviewer>,
+    developers: List<ComposeDeveloper>,
     totalItems: Int,
     startIndex: Int,
     itemSize: Dp,
@@ -172,12 +186,11 @@ private fun CircularCarouselList(
         flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState)
     ) {
         items(count = totalItems, key = { it }) { index ->
-            val rawIndex = index - startIndex
-            val safeIndex = ((rawIndex % reviewers.size) + reviewers.size) % reviewers.size
-            val reviewer = reviewers[safeIndex]
+            val actualIndex = (index - startIndex).mod(developers.size)
+            val developer = developers[actualIndex]
 
             CarouselItem(
-                reviewer = reviewer,
+                developer = developer,
                 lazyListState = lazyListState,
                 itemSize = itemSize,
                 radiusPx = radiusPx,

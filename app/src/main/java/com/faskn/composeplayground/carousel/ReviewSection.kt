@@ -1,9 +1,15 @@
 package com.faskn.composeplayground.carousel
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,53 +26,64 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun ReviewSection(
-    reviewer: ComposeReviewer?,
-    onPageDirection: (CarouselDirection) -> Unit
+    developer: ComposeDeveloper?,
+    onNavigationEvent: (CarouselDirection) -> Unit
 ) {
-
-    AnimatedContent(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        targetState = reviewer,
-        label = "ReviewText",
-        transitionSpec = { fadeIn() togetherWith fadeOut() }
-    ) { currentReviewer ->
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                CarouselControlButton(
-                    icon = Icons.AutoMirrored.Default.KeyboardArrowLeft,
-                    contentDescription = "Previous",
-                    onClick = { onPageDirection(CarouselDirection.PREV) }
-                )
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            CarouselControlButton(
+                icon = Icons.AutoMirrored.Default.KeyboardArrowLeft,
+                contentDescription = "Previous",
+                onClick = { onNavigationEvent(CarouselDirection.PREV) }
+            )
+            AnimatedContent(
+                modifier = Modifier.weight(1f),
+                targetState = developer,
+                label = "ReviewText",
+                transitionSpec = { fadeIn() + slideInVertically() togetherWith slideOutVertically() + fadeOut() }
+            ) { currentReviewer ->
                 Text(
                     text = currentReviewer?.review.orEmpty(),
                     fontWeight = FontWeight.SemiBold,
-                    color = White.copy(alpha = 0.8f),
+                    fontSize = 20.sp,
+                    color = White,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(1f),
-                )
-                CarouselControlButton(
-                    icon = Icons.AutoMirrored.Default.KeyboardArrowRight,
-                    contentDescription = "Next",
-                    onClick = { onPageDirection(CarouselDirection.NEXT) }
                 )
             }
-
-            Text(
-                modifier = Modifier.padding(top = 4.dp),
-                text = currentReviewer?.name.orEmpty(),
-                fontWeight = FontWeight.Bold,
-                color = White.copy(alpha = 0.25f),
-                fontStyle = FontStyle.Italic,
-                textAlign = TextAlign.Center
+            CarouselControlButton(
+                icon = Icons.AutoMirrored.Default.KeyboardArrowRight,
+                contentDescription = "Next",
+                onClick = { onNavigationEvent(CarouselDirection.NEXT) }
             )
         }
+
+        Text(
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .animateContentSize(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessVeryLow
+                    )
+                ),
+            text = developer?.name.orEmpty(),
+            fontWeight = FontWeight.Bold,
+            color = White.copy(alpha = 0.25f),
+            fontStyle = FontStyle.Italic,
+            textAlign = TextAlign.Center
+        )
     }
 }

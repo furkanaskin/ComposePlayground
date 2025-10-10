@@ -23,6 +23,9 @@ data class CarouselConfig(
 ) {
     companion object {
         fun from(dimensions: ScreenDimensions): CarouselConfig {
+            // Screen width = 1x,
+            // itemSize = width * 0.33x,
+            // total = 3 items on screen
             val itemSize = (dimensions.width * ITEM_SIZE_MULTIPLIER)
                 .coerceAtLeast(MIN_ITEM_SIZE_DP.dp)
             val radiusDp = itemSize * RADIUS_MULTIPLIER
@@ -31,37 +34,41 @@ data class CarouselConfig(
     }
 }
 
-fun getReviewers() = listOf(
-    ComposeReviewer(
+fun getDevelopers() = listOf(
+    ComposeDeveloper(
         id = 1,
         name = "Alex Chen",
         profileImage = R.drawable.androidify1,
         review = "\"Compose makes UI fast and fun.\""
     ),
-    ComposeReviewer(
+    ComposeDeveloper(
         id = 2,
-        name = "Marcus Rivera",
+        name = "Julia Lee",
         profileImage = R.drawable.androidify2,
         review = "\"State management is super simple.\""
     ),
-    ComposeReviewer(
+    ComposeDeveloper(
         id = 3,
         name = "Sarah Kim",
         profileImage = R.drawable.androidify3,
         review = "\"Animations are smooth and easy.\""
     ),
-    ComposeReviewer(
+    ComposeDeveloper(
         id = 4,
         name = "Emily Watson",
         profileImage = R.drawable.androidify4,
-        review = "\"Material Design looks great here.\""
+        review = "\"Material Design looks fantastic!\""
     ),
-    ComposeReviewer(
+    ComposeDeveloper(
         id = 5,
         name = "David Park",
         profileImage = R.drawable.androidify5,
         review = "\"Reusable components boost productivity.\""
+    ),
+    ComposeDeveloper(
+        id = 6,
+        name = "Marcus Rivera",
+        profileImage = R.drawable.androidify6,
+        review = "\"Compose lets me build Android UIs faster and with more fun!\""
     )
 )
-
-

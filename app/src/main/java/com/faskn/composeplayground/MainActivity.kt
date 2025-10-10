@@ -44,7 +44,7 @@ fun PlaygroundApp() {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Home.route,
+            startDestination = Screen.CircularCarousel.route,
         ) {
             composable(Screen.Home.route) {
                 HomePage(

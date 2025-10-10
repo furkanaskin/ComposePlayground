@@ -1,6 +1,5 @@
 package com.faskn.composeplayground.carousel
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -21,7 +20,6 @@ import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import coil3.compose.AsyncImage
-import com.faskn.composeplayground.ui.theme.TechBlack
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -29,7 +27,7 @@ import kotlin.math.sin
 
 @Composable
 fun CarouselItem(
-    reviewer: ComposeReviewer,
+    developer: ComposeDeveloper,
     lazyListState: LazyListState,
     itemSize: Dp,
     radiusPx: Float,
@@ -46,32 +44,42 @@ fun CarouselItem(
                 itemWidth = coordinates.size.width.toFloat()
             }
             .graphicsLayer {
+                // Get viewport and item position
                 val viewportWidth = lazyListState.layoutInfo.viewportSize.width.toFloat()
                 val viewportCenter = viewportWidth / 2f
                 val itemCenter = itemOffset + (itemWidth / 2f)
                 val distanceFromCenter = itemCenter - viewportCenter
+                // Calculate offset as a fraction of item width
                 val pageOffsetFraction = distanceFromCenter / (itemWidth + density.density)
-
+                // Map offset to angle for circular effect
                 val angleRad = pageOffsetFraction * PI * 0.25f
+                // X: horizontal position on circle (sin)
                 translationX = (radiusPx * sin(angleRad)).toFloat()
+                // Y: vertical position on circle (1-cos)
                 translationY = (radiusPx * (1 - cos(angleRad * 2))).toFloat()
-                alpha = (1f - abs(pageOffsetFraction).coerceIn(0f, 1f))
+
+                // Fade out items near the edge
+                // simply 1f - abs(pageOffsetFraction).coerceIn(0f,1f)
+                // but sometimes fraction is not exactly 1f so just round it
+                alpha = (1f - abs(pageOffsetFraction)
+                    .coerceIn(0f, 0.75f)
+                    .times(1.34f))
             }
-            .clip(CircleShape)
-            .background(TechBlack.copy(alpha = 0.25f), shape = CircleShape),
+            .clip(CircleShape),
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
-            model = reviewer.profileImage,
+            model = developer.profileImage,
             modifier = Modifier
                 .fillMaxSize()
                 .graphicsLayer {
+                    // Ignore this part, just for better visual. Use headshot images
                     scaleX = 1.75f
                     scaleY = 1.75f
                     translationY = itemSize.toPx() * 0.25f
                 },
             contentScale = ContentScale.Crop,
-            contentDescription = reviewer.name
+            contentDescription = developer.name
         )
     }
 }
