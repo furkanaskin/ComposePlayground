@@ -21,6 +21,13 @@ creating spirograph patterns.
 
 https://github.com/user-attachments/assets/e71144d3-5a68-4a57-90a9-330bc264a0a0
 
+### 4. Circular Carousel with LazyRow
+
+A circular carousel effect using LazyRow enhanced with graphicsLayer and trigonometric calculations.
+Features infinite scroll and auto snap.
+
+https://github.com/user-attachments/assets/474c58c3-1bf9-4eeb-b541-c088451fa2d6
+
 ## Credits
 
 ### 3D Models
