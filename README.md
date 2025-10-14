@@ -28,6 +28,13 @@ Features infinite scroll and auto snap.
 
 https://github.com/user-attachments/assets/474c58c3-1bf9-4eeb-b541-c088451fa2d6
 
+### 5. Jetpack Compose Shadow Chain Tutorial
+
+Chain dropShadow() and innerShadow() modifiers in Jetpack Compose to create 3D-like, fake glassy,
+and blurred shadow effects.
+
+https://github.com/user-attachments/assets/355574f5-ba35-4b41-9845-f13f006de698
+
 ## Credits
 
 ### 3D Models
