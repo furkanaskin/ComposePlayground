@@ -12,7 +12,7 @@ import com.faskn.composeplayground.ui.theme.Black700
 fun CarouselControlButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
-    contentDescription: String,
+    contentDescription: String = "",
     onClick: () -> Unit = {}
 ) {
     FilledIconButton(

@@ -67,6 +67,10 @@ fun HomePage(
             title = "Circular Carousel",
             description = "Circular carousel using LazyRow and graphicsLayer transformations.",
             screen = Screen.CircularCarousel
+        ), Tutorial(
+            title = "Shadows",
+            description = "Various inner and drop shadow effects using Jetpack Compose.",
+            screen = Screen.Shadows
         )
     )
 

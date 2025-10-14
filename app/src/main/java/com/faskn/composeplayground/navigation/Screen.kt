@@ -8,6 +8,7 @@ object Routes {
     const val PRODUCT_LIST = "product_list"
     const val PRODUCT_DETAIL = "product_detail/{productId}"
     const val CIRCULAR_CAROUSEL = "circular_carousel"
+    const val SHADOWS = "shadows"
 }
 
 sealed class Screen(val route: String) {
@@ -19,4 +20,5 @@ sealed class Screen(val route: String) {
     }
     data object AGSLSample : Screen("agsl_sample")
     data object CircularCarousel : Screen(Routes.CIRCULAR_CAROUSEL)
+    data object Shadows : Screen(Routes.SHADOWS)
 }
