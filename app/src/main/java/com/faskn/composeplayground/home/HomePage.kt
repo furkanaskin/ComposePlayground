@@ -71,6 +71,10 @@ fun HomePage(
             title = "Shadows",
             description = "Various inner and drop shadow effects using Jetpack Compose.",
             screen = Screen.Shadows
+        ), Tutorial(
+            title = "Side Panel Layout",
+            description = "An animated custom side panel layout with drag handle in Jetpack Compose.",
+            screen = Screen.SidePanel
         )
     )
 

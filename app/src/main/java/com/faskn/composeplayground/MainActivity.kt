@@ -22,6 +22,7 @@ import com.faskn.composeplayground.navigation.Screen
 import com.faskn.composeplayground.product.view.ProductDetailScreen
 import com.faskn.composeplayground.product.view.ProductListScreen
 import com.faskn.composeplayground.shadows.ShadowsScreen
+import com.faskn.composeplayground.sidepanel.SidePanelScreen
 import com.faskn.composeplayground.ui.theme.ComposePlaygroundTheme
 
 class MainActivity : ComponentActivity() {
@@ -89,6 +90,10 @@ fun PlaygroundApp() {
 
             composable(Screen.Shadows.route) {
                 ShadowsScreen()
+            }
+
+            composable(Screen.SidePanel.route) {
+                SidePanelScreen()
             }
         }
     }
