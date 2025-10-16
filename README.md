@@ -35,6 +35,12 @@ and blurred shadow effects.
 
 https://github.com/user-attachments/assets/355574f5-ba35-4b41-9845-f13f006de698
 
+## 6. Side Panel Custom Layout
+
+An animated custom side panel layout with drag handle in Jetpack Compose.
+
+https://github.com/user-attachments/assets/fc97ac2c-9598-4a38-bef6-caf3c7b68771
+
 ## Credits
 
 ### 3D Models
