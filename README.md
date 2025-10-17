@@ -1,7 +1,6 @@
 # ComposePlayground
 
-A small Jetpack Compose playground showcasing modern UI/animation patterns with a sleek black theme in fullscreen.
-
+A small Jetpack Compose playground experimenting with UI and animation techniques. It demonstrates a variety of interactive and visually rich UI components and effects.
 ### 1. Credit Card Selection Animation
 
 Interactive credit card selection with smooth drag gestures and animations.
