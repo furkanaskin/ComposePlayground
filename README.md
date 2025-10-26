@@ -45,7 +45,7 @@ https://github.com/user-attachments/assets/fc97ac2c-9598-4a38-bef6-caf3c7b68771
 
 Shared element transition between toolbar and content using Jetpack Compose.
 
-https://github.com/user-attachments/assets/e93cb85b-3771-4599-8765-bfad9bd2d32c
+https://github.com/user-attachments/assets/49f36a50-86cc-4a0b-902e-d1bf66516327
 
 ## Credits
 
