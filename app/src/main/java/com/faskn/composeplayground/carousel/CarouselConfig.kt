@@ -2,6 +2,7 @@ package com.faskn.composeplayground.carousel
 
 import androidx.compose.ui.unit.Dp
 import com.faskn.composeplayground.R
+import kotlinx.collections.immutable.persistentListOf
 
 const val ITEM_SIZE_MULTIPLIER = 0.33333334f // 1/3 of screen width for LazyRow, don't change
 const val ITEM_PADDING_MULTIPLIER = 0.60f // 0.60f means ~40% padding from shortest edge
@@ -44,7 +45,7 @@ data class CarouselConfig(
     }
 }
 
-fun getDevelopers() = listOf(
+fun getDevelopers() = persistentListOf(
     ComposeDeveloper(
         id = 1,
         name = "Alex Chen",

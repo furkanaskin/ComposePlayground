@@ -38,10 +38,6 @@ android {
     composeCompiler {
         reportsDestination = layout.buildDirectory.dir("compose_metrics")
         metricsDestination = layout.buildDirectory.dir("compose_metrics")
-
-        stabilityConfigurationFiles.add(
-            rootProject.layout.projectDirectory.file("stability_config.conf")
-        )
     }
 
     buildFeatures {
@@ -64,6 +60,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.sceneview)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)

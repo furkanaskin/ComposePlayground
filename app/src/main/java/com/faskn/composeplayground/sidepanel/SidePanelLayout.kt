@@ -14,8 +14,8 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +43,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.sqrt
@@ -122,7 +121,6 @@ fun SidePanelLayout(
                 state = state,
                 arrangement = arrangement,
                 dragHandleContent = dragHandleContent,
-                scope = scope
             )
         }
     ) { measurables, constraints ->
@@ -189,8 +187,8 @@ private fun DragHandle(
     state: SidePanelStateHolder,
     arrangement: SidePanelArrangement,
     dragHandleContent: @Composable (Boolean, Float) -> Unit,
-    scope: CoroutineScope
 ) {
+    val scope = rememberCoroutineScope()
     var dragHandleRect by remember { mutableStateOf(Rect(0, 0, 0, 0)) }
     ExcludeDragHandleRectFromGesture(dragHandleRect)
 
@@ -225,13 +223,17 @@ private fun DragHandle(
 enum class SidePanelState { Expanded, Collapsed }
 enum class SidePanelArrangement { Start, End }
 
-@Stable
+@Immutable
 class SidePanelStateHolder internal constructor(
-    initialState: SidePanelState,
-    private val animationSpec: FiniteAnimationSpec<Float>
+    initialState: SidePanelState
 ) {
     private val _state = mutableStateOf(initialState)
     val currentState: SidePanelState by _state
+
+    private val animationSpec = spring<Float>(
+        dampingRatio = Spring.DampingRatioNoBouncy,
+        stiffness = Spring.StiffnessLow
+    )
 
     private val sheetWidth = Animatable(0f)
     private var measuredSheetWidthPx by mutableFloatStateOf(0f)
@@ -257,11 +259,14 @@ class SidePanelStateHolder internal constructor(
         }
     }
 
-    suspend fun animateTo(state: SidePanelState) {
+    suspend fun animateTo(
+        state: SidePanelState,
+        arcAnimationSpec: FiniteAnimationSpec<Float> = animationSpec
+    ) {
         if (measuredSheetWidthPx <= 0f) return
 
         val targetWidth = if (state == SidePanelState.Expanded) measuredSheetWidthPx else 0f
-        sheetWidth.animateTo(targetWidth, animationSpec)
+        sheetWidth.animateTo(targetWidth, arcAnimationSpec)
         _state.value = state
     }
 
@@ -298,13 +303,9 @@ class SidePanelStateHolder internal constructor(
 @Composable
 fun rememberSidePanelState(
     initialState: SidePanelState = SidePanelState.Collapsed,
-    animationSpec: FiniteAnimationSpec<Float> = spring(
-        dampingRatio = Spring.DampingRatioNoBouncy,
-        stiffness = Spring.StiffnessLow
-    )
 ): SidePanelStateHolder {
-    return remember(initialState, animationSpec) {
-        SidePanelStateHolder(initialState, animationSpec)
+    return remember(initialState) {
+        SidePanelStateHolder(initialState)
     }
 }
 

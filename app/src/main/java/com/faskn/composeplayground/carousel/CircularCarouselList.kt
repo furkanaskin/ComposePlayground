@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import coil3.compose.AsyncImage
+import kotlinx.collections.immutable.ImmutableList
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -33,7 +34,7 @@ import kotlin.math.sin
 @Composable
 fun CircularCarouselList(
     lazyListState: LazyListState,
-    developers: List<ComposeDeveloper>,
+    developers: ImmutableList<ComposeDeveloper>,
     totalItems: Int,
     startIndex: Int,
     itemSize: Dp,

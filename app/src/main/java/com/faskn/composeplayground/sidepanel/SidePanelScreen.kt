@@ -75,13 +75,13 @@ import com.faskn.composeplayground.ui.theme.TechBlack
 import com.faskn.composeplayground.ui.theme.TransparentWhite600
 import com.faskn.composeplayground.ui.theme.White800
 import com.faskn.composeplayground.ui.theme.White900
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 @Composable
 fun SidePanelScreen() {
     val sidePanelState = rememberSidePanelState(initialState = SidePanelState.Collapsed)
-    val coroutineScope = rememberCoroutineScope()
     var productImageHeightDp by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
     val containerColor = Color(0xFFF2F6FF)
@@ -214,7 +214,6 @@ fun SidePanelScreen() {
             containerColor = containerColor,
             dragHandleContent = { isExpanded, progress ->
                 CustomDragHandle(
-                    scope = coroutineScope,
                     sidePanelState = sidePanelState,
                     containerColor = containerColor,
                     productColor = selectedProduct.colors.first()
@@ -233,11 +232,12 @@ fun SidePanelScreen() {
 
 @Composable
 fun CustomDragHandle(
-    scope: CoroutineScope,
     sidePanelState: SidePanelStateHolder,
     containerColor: Color,
     productColor: Color
 ) {
+    val scope = rememberCoroutineScope()
+
     val scale by animateFloatAsState(
         targetValue = if (sidePanelState.currentState == SidePanelState.Expanded) 0.9f else 1f,
         animationSpec = spring(
@@ -439,7 +439,7 @@ data class Product(
     val id: Int,
     val imageRes: Int,
     val model: String,
-    val colors: List<Color>,
+    val colors: ImmutableList<Color>,
     val description: String
 )
 
@@ -448,7 +448,7 @@ val productList = listOf(
         id = 0,
         imageRes = R.drawable.ai_gen_running_sneaker1,
         model = "UltraStep Aurora Blaze",
-        colors = listOf(
+        colors = persistentListOf(
             Color(0xFFE33B08), // Aurora Orange
             Color(0xFFF5AD08), // Solar Yellow
             Color(0xFF54C697)  // Mint Green
@@ -459,14 +459,14 @@ val productList = listOf(
         id = 1,
         imageRes = R.drawable.ai_gen_running_sneaker2,
         model = "UltraStep Crimson Pulse",
-        colors = listOf(Color(0xFF910E13)), // Crimson Red
+        colors = persistentListOf(Color(0xFF910E13)), // Crimson Red
         description = "Stands out with powerful red tones. Its lightweight structure and flexible sole reduce fatigue even during long runs. Perfect for those who want a bold and dynamic look."
     ),
     Product(
         id = 2,
         imageRes = R.drawable.ai_gen_running_sneaker3,
         model = "UltraStep Spectrum Runner",
-        colors = listOf(
+        colors = persistentListOf(
             Color(0xFF863CC7), // Violet
             Color(0xFFC21326), // Ruby
             Color(0xFF0EB2E5), // Sky Blue
@@ -478,7 +478,7 @@ val productList = listOf(
         id = 3,
         imageRes = R.drawable.ai_gen_running_sneaker4,
         model = "UltraStep Phantom Black",
-        colors = listOf(Color(0xFF0D0D0D)), // Phantom Black
+        colors = persistentListOf(Color(0xFF0D0D0D)), // Phantom Black
         description = "Timeless elegance of black meets modern technology. With cushioning and support features, it offers top-level comfort for daily use and training."
     )
 )
