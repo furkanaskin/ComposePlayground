@@ -32,8 +32,18 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlin {
-       jvmToolchain(17)
+        jvmToolchain(17)
     }
+
+    composeCompiler {
+        reportsDestination = layout.buildDirectory.dir("compose_metrics")
+        metricsDestination = layout.buildDirectory.dir("compose_metrics")
+
+        stabilityConfigurationFiles.add(
+            rootProject.layout.projectDirectory.file("stability_config.conf")
+        )
+    }
+
     buildFeatures {
         compose = true
     }
@@ -41,10 +51,11 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.animation)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
