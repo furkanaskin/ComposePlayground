@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Animation
 import androidx.compose.material.icons.filled.Search
@@ -36,19 +35,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import com.faskn.composeplayground.ui.theme.TechBlack
 import kotlinx.coroutines.delay
-
 
 /**
  * Scale Animation: Title scales from large to small during scroll-driven transition.
@@ -113,14 +108,16 @@ fun SharedTransitionScope.SharedElementToolbarScaleAnimation(
         label = "titleFontSize"
     )
 
-    val imageHeights = remember {
-        List(40) { index ->
-            if (index % 2 == 0) 300 else 200
+    val images = remember {
+        List(30) { index ->
+            val imageHeight = if (index % 2 == 0) 300 else 200
+            imageHeight to "https://picsum.photos/id/${index + 10}/${imageHeight}/${imageHeight * 2}"
         }
     }
 
     // Image loading state with 500ms delay
     var showImages by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         delay(500)
         showImages = true
@@ -201,7 +198,10 @@ fun SharedTransitionScope.SharedElementToolbarScaleAnimation(
             verticalItemSpacing = 8.dp,
             modifier = Modifier.fillMaxSize()
         ) {
-            item(span = StaggeredGridItemSpan.FullLine) {
+            item(
+                key = "title_header",
+                span = StaggeredGridItemSpan.FullLine
+            ) {
                 Box(
                     modifier = Modifier
                         .clipToBounds()
@@ -227,16 +227,14 @@ fun SharedTransitionScope.SharedElementToolbarScaleAnimation(
                 }
             }
 
-            items(30) { index ->
-                AsyncImage(
-                    model = "https://picsum.photos/seed/${index * 2}/${imageHeights[index]}/${imageHeights[index] * 2}",
-                    contentDescription = "Photo $index",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(12.dp))
-                        .height(imageHeights[index].dp)
-                        .graphicsLayer { alpha = imagesAlpha }
+            items(
+                count = images.size,
+                key = { index -> "photo_$index" }
+            ) { index ->
+                ImageItem(
+                    height = images[index].first,
+                    url = images[index].second,
+                    alpha = imagesAlpha
                 )
             }
         }
