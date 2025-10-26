@@ -75,6 +75,10 @@ fun HomePage(
             title = "Side Panel Layout",
             description = "An animated custom side panel layout with drag handle in Jetpack Compose.",
             screen = Screen.SidePanel
+        ), Tutorial(
+            title = "Shared Element With Caller Managed Visibility",
+            description = "Toolbar transition with SharedElement. Works like MotionLayout, depends on specific scroll position.",
+            screen = Screen.SharedElementToolbarTransition
         )
     )
 

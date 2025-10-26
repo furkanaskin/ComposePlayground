@@ -22,6 +22,7 @@ import com.faskn.composeplayground.navigation.Screen
 import com.faskn.composeplayground.product.view.ProductDetailScreen
 import com.faskn.composeplayground.product.view.ProductListScreen
 import com.faskn.composeplayground.shadows.ShadowsScreen
+import com.faskn.composeplayground.sharedelement.SharedElementScreen
 import com.faskn.composeplayground.sidepanel.SidePanelScreen
 import com.faskn.composeplayground.ui.theme.ComposePlaygroundTheme
 
@@ -94,6 +95,10 @@ fun PlaygroundApp() {
 
             composable(Screen.SidePanel.route) {
                 SidePanelScreen()
+            }
+
+            composable(Screen.SharedElementToolbarTransition.route) {
+                SharedElementScreen()
             }
         }
     }
