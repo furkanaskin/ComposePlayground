@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Animation
@@ -228,12 +229,12 @@ fun SharedTransitionScope.SharedElementToolbarScaleAnimation(
             }
 
             items(
-                count = images.size,
+                items = images,
                 key = { index -> "photo_$index" }
-            ) { index ->
+            ) { item ->
                 ImageItem(
-                    height = images[index].first,
-                    url = images[index].second,
+                    height = item.first,
+                    url = item.second,
                     alpha = imagesAlpha
                 )
             }
