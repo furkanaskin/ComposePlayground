@@ -42,8 +42,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastCoerceAtMost
 import androidx.compose.ui.util.lerp
 import com.faskn.composeplayground.ui.theme.TechBlack
 import kotlinx.coroutines.delay
@@ -54,6 +56,7 @@ import kotlinx.coroutines.delay
  * - Title starts large (48sp) in the content area
  * - When scroll threshold is reached, toolbar title slides in from the left
  * - Animation progress is driven by scroll position (0f to 1f)
+ * - Transition point: content title midpoint reaches toolbar bottom
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,14 +65,16 @@ fun SharedTransitionScope.SharedElementToolbarSlideAnimation(
 ) {
     val key = "key_shared_transition_toolbar_slide_anim"
     val gridState = rememberLazyStaggeredGridState()
-    var topAppBarY by remember { mutableFloatStateOf(0f) }
+    val density = LocalDensity.current
+
+    var scaffoldPaddingTopPx by remember { mutableFloatStateOf(0f) } // (top app bar + status bar)
     var contentTitleY by remember { mutableFloatStateOf(0f) }
     var contentTitleHeight by remember { mutableFloatStateOf(0f) }
 
     // Determines if layout measurements are ready for transition calculations
     val isLayoutReady by remember {
         derivedStateOf {
-            contentTitleHeight > 0f && contentTitleY > 0f && topAppBarY > 0f
+            contentTitleHeight > 0f && contentTitleY > 0f && scaffoldPaddingTopPx > 0f
         }
     }
 
@@ -80,14 +85,20 @@ fun SharedTransitionScope.SharedElementToolbarSlideAnimation(
         }
     }
 
-    // Scroll threshold to trigger title transition
+    // Calculate scroll threshold: distance to scroll until transition occurs
+    // Transition occurs when content title's midpoint reaches the toolbar's bottom edge
     val scrollThreshold by remember {
         derivedStateOf {
-            contentTitleY - (topAppBarY - contentTitleHeight / 2f)
+            // Convert content title's Y position to scrollable content coordinates
+            val contentTitleRelativeY = contentTitleY - scaffoldPaddingTopPx
+            // Calculate the midpoint position (where transition should complete)
+            val contentTitleMidpointRelative = contentTitleRelativeY + (contentTitleHeight / 2f)
+            contentTitleMidpointRelative
         }
     }
 
     // Tracks scroll-driven animation progress (0f to 1f)
+    // Progress reaches 1f when content title's midpoint aligns with toolbar bottom
     val transitionProgress by remember {
         derivedStateOf {
             val firstItemIndex = gridState.firstVisibleItemIndex
@@ -141,9 +152,6 @@ fun SharedTransitionScope.SharedElementToolbarSlideAnimation(
         containerColor = TechBlack,
         topBar = {
             TopAppBar(
-                modifier = Modifier.onPlaced { coordinates ->
-                    topAppBarY = coordinates.positionInRoot().y
-                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = TechBlack,
                     navigationIconContentColor = Color.White,
@@ -214,6 +222,11 @@ fun SharedTransitionScope.SharedElementToolbarSlideAnimation(
             )
         }
     ) { padding ->
+        // Capture scaffold's top padding (top app bar + status bar) in pixels
+        if (scaffoldPaddingTopPx == 0f) {
+            scaffoldPaddingTopPx = with(density) { padding.calculateTopPadding().toPx() }
+        }
+
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
             state = gridState,
@@ -232,8 +245,11 @@ fun SharedTransitionScope.SharedElementToolbarSlideAnimation(
                         .padding(top = 32.dp)
                         .height(60.dp)
                         .onPlaced { coordinates ->
-                            contentTitleY = coordinates.positionInRoot().y
-                            contentTitleHeight = coordinates.size.height.toFloat()
+                            // Measure content title position and height only once
+                            if (contentTitleY == 0f || contentTitleHeight == 0f) {
+                                contentTitleY = coordinates.positionInRoot().y
+                                contentTitleHeight = coordinates.size.height.toFloat()
+                            }
                         }
                         .sharedElementWithCallerManagedVisibility(
                             renderInOverlayDuringTransition = false,
@@ -245,7 +261,7 @@ fun SharedTransitionScope.SharedElementToolbarSlideAnimation(
                         )
                         .skipToLookaheadSize()
                         .skipToLookaheadPosition()
-                        .graphicsLayer { alpha = 1f - transitionProgress }
+                        .graphicsLayer { alpha = 1f - transitionProgress.fastCoerceAtMost(0.75f) }
                 ) {
                     if (!isTitleInAppBar) titleContent()
                 }
