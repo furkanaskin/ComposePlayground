@@ -41,7 +41,7 @@ An animated custom side panel layout with drag handle in Jetpack Compose.
 
 https://github.com/user-attachments/assets/fc97ac2c-9598-4a38-bef6-caf3c7b68771
 
-### [Shared Element Toolbar Transition](https://github.com/furkanaskin/ComposePlayground/tree/compose-bom-beta-shared-transition/app/src/main/java/com/faskn/composeplayground/sharedelement)
+### [Shared Element Toolbar Transition](app/src/main/java/com/faskn/composeplayground/sharedelement)
 
 Shared element transition between toolbar and content using Jetpack Compose.
 
