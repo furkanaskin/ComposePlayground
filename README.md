@@ -45,13 +45,6 @@ https://github.com/user-attachments/assets/fc97ac2c-9598-4a38-bef6-caf3c7b68771
 
 Shared element transition between toolbar and content using Jetpack Compose.
 
-#### Note
-
-> This sample is available in
-> the [compose-bom-beta-shared-transition](https://github.com/furkanaskin/ComposePlayground/tree/compose-bom-beta-shared-transition)
-> branch because it requires a beta version of Compose BOM, which may break the Layout Inspector in
-> stable versions.
-
 https://github.com/user-attachments/assets/49f36a50-86cc-4a0b-902e-d1bf66516327
 
 ## Credits
