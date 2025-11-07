@@ -17,6 +17,7 @@ import androidx.navigation.navArgument
 import com.faskn.composeplayground.agsl.AGSLSampleScreen
 import com.faskn.composeplayground.carousel.CircularCarouselScreen
 import com.faskn.composeplayground.creditcard.CardCollapsingPagerScreen
+import com.faskn.composeplayground.explodablechips.ExplodableChipsScreen
 import com.faskn.composeplayground.home.HomePage
 import com.faskn.composeplayground.navigation.Screen
 import com.faskn.composeplayground.product.view.ProductDetailScreen
@@ -95,6 +96,10 @@ fun PlaygroundApp() {
 
             composable(Screen.SidePanel.route) {
                 SidePanelScreen()
+            }
+
+            composable(Screen.ExplodableChips.route) {
+                ExplodableChipsScreen()
             }
 
             composable(Screen.SharedElementToolbarTransition.route) {

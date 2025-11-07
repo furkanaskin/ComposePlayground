@@ -14,9 +14,12 @@ val Black500 = Color(0xFF444444)
 
 val White900 = Color(0xFFFFFFFF)
 val White800 = Color(0xFFF5F5F5)
-val Gray500 = Color(0xFF1F1F1F)
+
+val Gray900 = Color(0xFF1F1F1F)
+
+val Gray600 = Color(0xFF242424)
+val Gray500 = Color(0xFF333333)
 val Gray400 = Color(0xFFB0B0B0)
-val Gray300 = Color(0xFF333333)
 val Green300 = Color(0xFFB2FF59)
 val AndroidGreen = Color(0xFF42DC8C)
 val Blue200 = Color(0xD94CDBFF)
@@ -27,3 +30,4 @@ val Pink100 = Color(0xFFFF6B9D)
 val TransparentWhite600 = Color.White.copy(alpha = 0.6f)
 val TransparentWhite200 = Color.White.copy(alpha = 0.2f)
 val TransparentGray100 = Color.LightGray.copy(alpha = 0.1f)
+

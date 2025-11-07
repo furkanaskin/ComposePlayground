@@ -79,6 +79,11 @@ fun HomePage(
             title = "Shared Element With Caller Managed Visibility",
             description = "Toolbar transition with SharedElement. Works like MotionLayout, depends on specific scroll position.",
             screen = Screen.SharedElementToolbarTransition
+        ),
+        Tutorial(
+            title = "Explodable Chips with swipe gestures",
+            description = "Interactive chips with swipe to explode effect using Jetpack Compose.",
+            screen = Screen.ExplodableChips
         )
     )
 

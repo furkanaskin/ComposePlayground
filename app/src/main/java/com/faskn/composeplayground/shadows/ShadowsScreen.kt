@@ -58,7 +58,7 @@ import com.faskn.composeplayground.ui.theme.Black900
 import com.faskn.composeplayground.ui.theme.Black950
 import com.faskn.composeplayground.ui.theme.Cyan100
 import com.faskn.composeplayground.ui.theme.Gray400
-import com.faskn.composeplayground.ui.theme.Gray500
+import com.faskn.composeplayground.ui.theme.Gray900
 import com.faskn.composeplayground.ui.theme.TechBlack
 import com.faskn.composeplayground.ui.theme.White900
 
@@ -526,7 +526,7 @@ private fun IconBox(icon: ImageVector) {
                 RoundedCornerShape(12.dp), Shadow(
                     12.dp,
                     brush = Brush.linearGradient(
-                        colors = listOf(White900, Gray500),
+                        colors = listOf(White900, Gray900),
                         start = Offset(90f, -90f),
                         end = Offset.Zero
                     ),

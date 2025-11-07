@@ -1,6 +1,7 @@
 # ComposePlayground
 
-A small Jetpack Compose playground experimenting with UI and animation techniques. It demonstrates a variety of interactive and visually rich UI components and effects.
+A small Jetpack Compose playground experimenting with UI and animation techniques. It demonstrates a
+variety of interactive and visually rich UI components and effects.
 
 ### [Credit Card Selection Animation](app/src/main/java/com/faskn/composeplayground/creditcard/CardsPager.kt)
 
@@ -41,6 +42,10 @@ An animated custom side panel layout with drag handle in Jetpack Compose.
 
 https://github.com/user-attachments/assets/fc97ac2c-9598-4a38-bef6-caf3c7b68771
 
+### [Explodable Chips with Physics](app/src/main/java/com/faskn/composeplayground/explodablechips/ExplodableChips.kt)
+
+Interactive selectable chips that explode with physics-based animations on swipe.
+
 ### [Shared Element Toolbar Transition](app/src/main/java/com/faskn/composeplayground/sharedelement)
 
 Shared element transition between toolbar and content using Jetpack Compose.
@@ -50,6 +55,7 @@ https://github.com/user-attachments/assets/49f36a50-86cc-4a0b-902e-d1bf66516327
 ## Credits
 
 ### 3D Models
+
 The following 3D models are used under Creative Commons Attribution license:
 
 - **Xbox Wireless Controller (White)** by Chistodrako._  

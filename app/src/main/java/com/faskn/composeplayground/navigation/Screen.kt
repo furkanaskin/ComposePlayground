@@ -10,7 +10,7 @@ object Routes {
     const val CIRCULAR_CAROUSEL = "circular_carousel"
     const val SHADOWS = "shadows"
     const val SIDE_PANEL = "side_panel"
-
+    const val EXPLODABLE_CHIPS = "explodable_chips"
     const val SHARED_ELEMENT_TOOLBAR_TRANSITION = "shared_element_toolbar_transition"
 }
 
@@ -26,6 +26,6 @@ sealed class Screen(val route: String) {
     data object CircularCarousel : Screen(Routes.CIRCULAR_CAROUSEL)
     data object Shadows : Screen(Routes.SHADOWS)
     data object SidePanel : Screen(Routes.SIDE_PANEL)
-
+    data object ExplodableChips : Screen(Routes.EXPLODABLE_CHIPS)
     data object SharedElementToolbarTransition : Screen(Routes.SHARED_ELEMENT_TOOLBAR_TRANSITION)
 }

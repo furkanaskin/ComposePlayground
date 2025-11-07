@@ -31,7 +31,7 @@ import com.faskn.composeplayground.agsl.SpirographConstants.L2_RANGE
 import com.faskn.composeplayground.agsl.SpirographConstants.S1_RANGE
 import com.faskn.composeplayground.agsl.SpirographConstants.S2_RANGE
 import com.faskn.composeplayground.ui.theme.Black700
-import com.faskn.composeplayground.ui.theme.Gray300
+import com.faskn.composeplayground.ui.theme.Gray500
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,7 +93,7 @@ fun ParameterSlider(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(4.dp)
-                            .background(Gray300, shape = RoundedCornerShape(2.dp))
+                            .background(Gray500, shape = RoundedCornerShape(2.dp))
                     ) {
                         Box(
                             modifier = Modifier
