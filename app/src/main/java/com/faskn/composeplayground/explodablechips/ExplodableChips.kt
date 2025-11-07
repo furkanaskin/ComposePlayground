@@ -113,7 +113,7 @@ private fun updateParticle(particle: Particle) {
     particle.alpha = particle.life.coerceIn(0f, 1f)
 }
 
-private fun createParticleExplosion(
+private fun createParticles(
     centerPosition: Offset,
     particles: MutableList<Particle>,
     color: Color = chipColors.random()
@@ -202,7 +202,7 @@ fun ExplodableChipsContainer(
                                     x = chipPosition.x - containerPosition.x,
                                     y = chipPosition.y - containerPosition.y
                                 )
-                                createParticleExplosion(relativePosition, particles)
+                                createParticles(relativePosition, particles)
                                 onItemDismissed(item, globalIndex, chipPosition)
                             }
                         }
