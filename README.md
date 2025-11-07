@@ -42,15 +42,17 @@ An animated custom side panel layout with drag handle in Jetpack Compose.
 
 https://github.com/user-attachments/assets/fc97ac2c-9598-4a38-bef6-caf3c7b68771
 
-### [Explodable Chips with Physics](app/src/main/java/com/faskn/composeplayground/explodablechips/ExplodableChips.kt)
-
-Interactive selectable chips that explode with physics-based animations on swipe.
-
 ### [Shared Element Toolbar Transition](app/src/main/java/com/faskn/composeplayground/sharedelement)
 
 Shared element transition between toolbar and content using Jetpack Compose.
 
 https://github.com/user-attachments/assets/49f36a50-86cc-4a0b-902e-d1bf66516327
+
+### [Explodable Chips with Physics](app/src/main/java/com/faskn/composeplayground/explodablechips/ExplodableChips.kt)
+
+Interactive selectable chips that explode with physics-based animations on swipe.
+
+https://github.com/user-attachments/assets/797d71a1-b529-4c12-a4f1-61497643d20d
 
 ## Credits
 
