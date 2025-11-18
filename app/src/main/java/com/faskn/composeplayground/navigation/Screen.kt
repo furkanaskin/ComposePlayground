@@ -12,6 +12,7 @@ object Routes {
     const val SIDE_PANEL = "side_panel"
     const val EXPLODABLE_CHIPS = "explodable_chips"
     const val SHARED_ELEMENT_TOOLBAR_TRANSITION = "shared_element_toolbar_transition"
+    const val SEGMENTED_WALLPAPER = "segmented_wallpaper"
 }
 
 sealed class Screen(val route: String) {
@@ -28,4 +29,5 @@ sealed class Screen(val route: String) {
     data object SidePanel : Screen(Routes.SIDE_PANEL)
     data object ExplodableChips : Screen(Routes.EXPLODABLE_CHIPS)
     data object SharedElementToolbarTransition : Screen(Routes.SHARED_ELEMENT_TOOLBAR_TRANSITION)
+    data object SegmentedWallpaper : Screen(Routes.SEGMENTED_WALLPAPER)
 }

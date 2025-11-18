@@ -22,10 +22,15 @@ import com.faskn.composeplayground.home.HomePage
 import com.faskn.composeplayground.navigation.Screen
 import com.faskn.composeplayground.product.view.ProductDetailScreen
 import com.faskn.composeplayground.product.view.ProductListScreen
+import com.faskn.composeplayground.segmentedwallpaper.SegmentedWallpaperScreen
 import com.faskn.composeplayground.shadows.ShadowsScreen
 import com.faskn.composeplayground.sharedelement.SharedElementScreen
 import com.faskn.composeplayground.sidepanel.SidePanelScreen
 import com.faskn.composeplayground.ui.theme.ComposePlaygroundTheme
+import com.google.firebase.Firebase
+import com.google.firebase.appcheck.appCheck
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import com.google.firebase.initialize
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +42,11 @@ class MainActivity : ComponentActivity() {
                 PlaygroundApp()
             }
         }
+
+        Firebase.initialize(context = this)
+        Firebase.appCheck.installAppCheckProviderFactory(
+            PlayIntegrityAppCheckProviderFactory.getInstance()
+        )
     }
 }
 
@@ -104,6 +114,9 @@ fun PlaygroundApp() {
 
             composable(Screen.SharedElementToolbarTransition.route) {
                 SharedElementScreen()
+            }
+            composable(Screen.SegmentedWallpaper.route) {
+                SegmentedWallpaperScreen()
             }
         }
     }

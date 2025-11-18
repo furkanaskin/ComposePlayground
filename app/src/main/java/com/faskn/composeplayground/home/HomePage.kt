@@ -84,6 +84,11 @@ fun HomePage(
             title = "Explodable Chips with swipe gestures",
             description = "Interactive chips with swipe to explode effect using Jetpack Compose.",
             screen = Screen.ExplodableChips
+        ),
+        Tutorial(
+            title = "Segmented Wallpaper",
+            description = "Animated wallpaper sample with segmented images using MLKit and generative fill with Firebase AI.",
+            screen = Screen.SegmentedWallpaper
         )
     )
 
