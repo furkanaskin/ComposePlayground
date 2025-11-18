@@ -1,6 +1,7 @@
 package com.faskn.composeplayground
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -46,10 +47,15 @@ class MainActivity : ComponentActivity() {
         // Enable Firebase App Check
         // Add your debug provider to Firebase for emulator
         // Check : https://firebase.google.com/docs/app-check/android/debug-provider?authuser=0#emulator
-        Firebase.initialize(context = this)
-        Firebase.appCheck.installAppCheckProviderFactory(
-            DebugAppCheckProviderFactory.getInstance()
-        )
+        try {
+            Firebase.initialize(context = this)
+            Firebase.appCheck.installAppCheckProviderFactory(
+                DebugAppCheckProviderFactory.getInstance()
+            )
+        } catch (e: Exception) {
+            // Firebase not configured - continuing without it
+            Log.w("MainActivity", "Firebase not initialized: ${e.message}")
+        }
     }
 }
 
