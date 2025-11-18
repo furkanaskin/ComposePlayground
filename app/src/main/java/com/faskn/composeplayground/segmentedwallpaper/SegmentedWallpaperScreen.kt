@@ -6,6 +6,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.EaseOutQuint
 import androidx.compose.animation.core.RepeatMode
@@ -72,12 +73,20 @@ import com.faskn.composeplayground.R
 import com.faskn.composeplayground.ui.theme.TechBlack
 import com.faskn.composeplayground.ui.theme.TransparentWhite600
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.roundToInt
+
+private const val LOG_TAG = "SegmentedWallpaper"
+private const val CLOCK_LETTER_SPACING = -10f
+private const val MIN_TEXT_SIZE = 40f
+private const val IMAGE_SCALE_WITH_SEGMENTATION = 1.1f
 
 private fun Context.getWallpaperResourceId(index: Int): Int =
     resources.getIdentifier("wallpaper${index + 1}", "drawable", packageName)
@@ -97,44 +106,62 @@ fun SegmentedWallpaperScreen(
     val backgroundFillState by viewModel.uiState.collectAsState()
     val segmentationDataSource = remember { ImageSegmentationFactory.create(context) }
 
+    // Track current segmentation job to cancel when page changes
+    val currentSegmentationJob = remember { mutableStateOf<Job?>(null) }
+
     LaunchedEffect(pagerState.currentPage) {
         val currentPage = pagerState.currentPage
+
+        // Cancel any ongoing segmentation from previous page
+        currentSegmentationJob.value?.cancel()
+        currentSegmentationJob.value = null
+
         viewModel.resetState()
+
+        // Debounce: Wait 1000ms to see if user is still swiping
+        delay(1000)
 
         if (!segmentationResults.containsKey(currentPage)) {
             val resourceId = context.getWallpaperResourceId(currentPage)
 
             if (resourceId != 0) {
-                try {
-                    val bitmap = withContext(Dispatchers.IO) {
-                        BitmapFactory.decodeResource(context.resources, resourceId)
-                    }
+                currentSegmentationJob.value = launch {
+                    try {
+                        Log.d(LOG_TAG, "Starting segmentation for page $currentPage")
 
-                    bitmap?.let {
-                        val result = withContext(Dispatchers.Default) {
-                            segmentationDataSource.segmentImage(it)
+                        val bitmap = withContext(Dispatchers.IO) {
+                            BitmapFactory.decodeResource(context.resources, resourceId)
                         }
-                        segmentationResults = segmentationResults + (currentPage to result)
-                    }
-                } catch (e: ImageSegmentationException) {
-                    android.util.Log.e(
-                        "SegmentedWallpaper",
-                        "Segmentation failed for page $currentPage: ${e.message}"
-                    )
-                } catch (e: OutOfMemoryError) {
-                    android.util.Log.e(
-                        "SegmentedWallpaper",
-                        "Out of memory during segmentation for page $currentPage",
-                        e
-                    )
-                    System.gc()
-                } catch (e: Exception) {
-                    if (e !is kotlinx.coroutines.CancellationException) {
-                        android.util.Log.e(
-                            "SegmentedWallpaper",
-                            "Error during segmentation for page $currentPage",
-                            e
-                        )
+
+                        // Check if still active after loading bitmap
+                        if (!isActive) {
+                            Log.d(
+                                LOG_TAG,
+                                "Segmentation cancelled after bitmap load for page $currentPage"
+                            )
+                            return@launch
+                        }
+
+                        bitmap?.let {
+                            val result = withContext(Dispatchers.Default) {
+                                segmentationDataSource.segmentImage(it)
+                            }
+
+                            // Only save result if we're still on the same page
+                            if (isActive && pagerState.currentPage == currentPage) {
+                                segmentationResults = segmentationResults + (currentPage to result)
+                                Log.d(LOG_TAG, "Segmentation completed for page $currentPage")
+                            } else {
+                                Log.d(
+                                    LOG_TAG,
+                                    "Segmentation discarded (page changed) for page $currentPage"
+                                )
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e(LOG_TAG, "Error during segmentation for page $currentPage", e)
+                    } finally {
+                        currentSegmentationJob.value = null
                     }
                 }
             }
@@ -243,12 +270,11 @@ fun WallpaperPageContent(
     var showFrontLayer by remember { mutableStateOf(true) }
     var gyroOffsetX by remember { mutableFloatStateOf(0f) }
     var gyroOffsetY by remember { mutableFloatStateOf(0f) }
-    val hasDepthEffect = segmentationResult?.background != null
+    val hasDepthEffect = backgroundFillState is BackgroundFillState.Success
 
     LaunchedEffect(backgroundFillState) {
         if (backgroundFillState is BackgroundFillState.Idle && currentPage == wallpaperIndex) {
             clockOffset = Offset.Zero
-            textSize = 92f
             showFrontLayer = true
             gyroOffsetX = 0f
             gyroOffsetY = 0f
@@ -296,8 +322,43 @@ fun WallpaperPageContent(
     val textMeasurer = rememberTextMeasurer()
     var containerWidthPx by remember { mutableStateOf(0) }
 
+    // Helper function to measure text width
+    val measureTextWidth = remember(textMeasurer) {
+        { text: String, size: Float ->
+            textMeasurer.measure(
+                text = text,
+                style = TextStyle(
+                    fontSize = size.sp,
+                    letterSpacing = TextUnit(CLOCK_LETTER_SPACING, TextUnitType.Sp),
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.ExtraBold
+                ),
+                maxLines = 1
+            ).size.width
+        }
+    }
+
+    // Calculate max text size when container width is available
+    LaunchedEffect(containerWidthPx, timeString) {
+        if (containerWidthPx > 0) {
+            var testSize = 12f
+            var lastFittingSize = 12f
+
+            while (testSize <= 500f) {
+                if (measureTextWidth(timeString, testSize) <= containerWidthPx) {
+                    lastFittingSize = testSize
+                    testSize += 5f
+                } else {
+                    break
+                }
+            }
+
+            textSize = lastFittingSize
+        }
+    }
+
     val hasSegmentation = segmentationResult != null
-    val imageScale = if (hasSegmentation) 1.1f else 1f
+    val imageScale = if (hasSegmentation) IMAGE_SCALE_WITH_SEGMENTATION else 1f
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -373,19 +434,10 @@ fun WallpaperPageContent(
                             )
 
                             if (containerWidthPx > 0) {
-                                val proposedSize = (textSize * zoom).coerceAtLeast(12f)
-                                val layout = textMeasurer.measure(
-                                    text = timeString,
-                                    style = TextStyle(
-                                        fontSize = proposedSize.sp,
-                                        letterSpacing = TextUnit(-10f, TextUnitType.Sp),
-                                        fontFamily = FontFamily.Monospace,
-                                        fontWeight = FontWeight.ExtraBold
-                                    ),
-                                    maxLines = 1
-                                )
+                                val proposedSize = (textSize * zoom).coerceAtLeast(MIN_TEXT_SIZE)
+                                val measuredWidth = measureTextWidth(timeString, proposedSize)
 
-                                textSize = if (layout.size.width <= containerWidthPx) {
+                                textSize = if (measuredWidth <= containerWidthPx) {
                                     proposedSize
                                 } else {
                                     textSize
@@ -398,7 +450,7 @@ fun WallpaperPageContent(
                 Text(
                     text = timeString,
                     fontSize = textSize.sp,
-                    letterSpacing = TextUnit(-10f, TextUnitType.Sp),
+                    letterSpacing = TextUnit(CLOCK_LETTER_SPACING, TextUnitType.Sp),
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color.White,

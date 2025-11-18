@@ -25,7 +25,7 @@ class GeminiRepository {
             // Create content with image and prompt
             // Request output at same dimensions as input
             val enhancedPrompt =
-                "$prompt Generate the output at the same dimensions (${image.width}x${image.height}) as the input image."
+                "$prompt Generate the output at the same dimensions as the input image."
 
             val inputContent = content {
                 text(enhancedPrompt)
@@ -34,7 +34,7 @@ class GeminiRepository {
 
             Log.d(
                 "GeminiRepository",
-                "Sending request to Vertex AI with image ${image.width}x${image.height}..."
+                "Sending request to Vertex AI with image..."
             )
 
             // Generate content

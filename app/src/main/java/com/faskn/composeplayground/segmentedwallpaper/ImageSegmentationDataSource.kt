@@ -45,14 +45,13 @@ class ImageSegmentationDataSourceImpl(
 
     companion object {
         private const val TAG = "ImageSegmentation"
-    }
 
-    private val segmenter by lazy {
         val options = SubjectSegmenterOptions.Builder()
             .enableForegroundBitmap()
             .enableForegroundConfidenceMask()
             .build()
-        SubjectSegmentation.getClient(options)
+
+        val segmenter = SubjectSegmentation.getClient(options)
     }
 
     /**
@@ -165,7 +164,7 @@ class ImageSegmentationDataSourceImpl(
     }
 
     override suspend fun segmentImage(bitmap: Bitmap): SegmentationResult {
-        Log.d(TAG, "Starting image segmentation for bitmap: ${bitmap.width}x${bitmap.height}")
+        Log.d(TAG, "Starting image segmentation")
         ensureModuleAvailable()
 
         val image = InputImage.fromBitmap(bitmap, 0)
@@ -181,6 +180,13 @@ class ImageSegmentationDataSourceImpl(
 
                         // Create background by inverting the foreground mask
                         val background = createBackgroundBitmap(bitmap, foreground)
+
+                        if (background == null) {
+                            Log.w(
+                                TAG,
+                                "Failed to create background bitmap due to memory constraints"
+                            )
+                        }
 
                         continuation.resume(
                             SegmentationResult(
@@ -200,6 +206,10 @@ class ImageSegmentationDataSourceImpl(
                     Log.e(TAG, "Segmentation processing failed", exception)
                     continuation.resumeWithException(exception)
                 }
+
+            continuation.invokeOnCancellation {
+                Log.d(TAG, "Segmentation cancelled, cleaning up resources")
+            }
         }
     }
 
@@ -208,36 +218,42 @@ class ImageSegmentationDataSourceImpl(
      * Creates a background bitmap by removing the foreground from the original image
      * Processes pixels in chunks to avoid OutOfMemoryError with large images
      */
-    private fun createBackgroundBitmap(original: Bitmap, foreground: Bitmap): Bitmap {
+    private fun createBackgroundBitmap(original: Bitmap, foreground: Bitmap): Bitmap? {
         val width = original.width
         val height = original.height
 
-        // Create a mutable copy of the original bitmap
-        val background = original.copy(Bitmap.Config.ARGB_8888, true)
+        return try {
+            // Create a mutable copy of the original bitmap
+            val background = original.copy(Bitmap.Config.ARGB_8888, true)
 
-        // Process pixels row by row to minimize memory usage
-        val rowPixels = IntArray(width)
-        val foregroundRowPixels = IntArray(width)
+            // Process pixels row by row to minimize memory usage
+            val rowPixels = IntArray(width)
+            val foregroundRowPixels = IntArray(width)
 
-        for (y in 0 until height) {
-            // Get one row of pixels at a time
-            original.getPixels(rowPixels, 0, width, 0, y, width, 1)
-            foreground.getPixels(foregroundRowPixels, 0, width, 0, y, width, 1)
+            for (y in 0 until height) {
+                // Get one row of pixels at a time
+                original.getPixels(rowPixels, 0, width, 0, y, width, 1)
+                foreground.getPixels(foregroundRowPixels, 0, width, 0, y, width, 1)
 
-            // Process the row
-            for (x in 0 until width) {
-                val alpha = (foregroundRowPixels[x] shr 24) and 0xFF
-                if (alpha > 0) {
-                    // This pixel is part of the foreground, make it transparent in background
-                    rowPixels[x] = 0x00000000
+                // Process the row
+                for (x in 0 until width) {
+                    val alpha = (foregroundRowPixels[x] shr 24) and 0xFF
+                    if (alpha > 0) {
+                        // This pixel is part of the foreground, make it transparent in background
+                        rowPixels[x] = 0x00000000
+                    }
                 }
+
+                // Set the processed row back to the background bitmap
+                background.setPixels(rowPixels, 0, width, 0, y, width, 1)
             }
 
-            // Set the processed row back to the background bitmap
-            background.setPixels(rowPixels, 0, width, 0, y, width, 1)
+            background
+        } catch (e: OutOfMemoryError) {
+            Log.e(TAG, "OutOfMemoryError while creating background bitmap", e)
+            System.gc()
+            null
         }
-
-        return background
     }
 }
 
