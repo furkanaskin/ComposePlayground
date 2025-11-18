@@ -1,4 +1,4 @@
-package com.faskn.composeplayground.segmentedwallpaper.gemini
+package com.faskn.composeplayground.segmentedwallpaper
 
 import android.graphics.Bitmap
 import android.util.Log
@@ -66,4 +66,3 @@ class GeminiRepository {
         }
     }
 }
-

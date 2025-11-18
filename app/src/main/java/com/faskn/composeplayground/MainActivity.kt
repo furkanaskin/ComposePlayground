@@ -29,7 +29,7 @@ import com.faskn.composeplayground.sidepanel.SidePanelScreen
 import com.faskn.composeplayground.ui.theme.ComposePlaygroundTheme
 import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
-import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.initialize
 
 class MainActivity : ComponentActivity() {
@@ -43,9 +43,12 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Enable Firebase App Check
+        // Add your debug provider to Firebase for emulator
+        // Check : https://firebase.google.com/docs/app-check/android/debug-provider?authuser=0#emulator
         Firebase.initialize(context = this)
         Firebase.appCheck.installAppCheckProviderFactory(
-            PlayIntegrityAppCheckProviderFactory.getInstance()
+            DebugAppCheckProviderFactory.getInstance()
         )
     }
 }
