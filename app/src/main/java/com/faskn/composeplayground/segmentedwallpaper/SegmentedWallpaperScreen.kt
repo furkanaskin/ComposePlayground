@@ -40,9 +40,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -88,8 +89,13 @@ private const val CLOCK_LETTER_SPACING = -10f
 private const val MIN_TEXT_SIZE = 40f
 private const val IMAGE_SCALE_WITH_SEGMENTATION = 1.1f
 
-private fun Context.getWallpaperResourceId(index: Int): Int =
-    resources.getIdentifier("wallpaper${index + 1}", "drawable", packageName)
+private val WALLPAPER_RES_IDS = intArrayOf(
+    R.drawable.wallpaper1,
+    R.drawable.wallpaper2,
+    R.drawable.wallpaper3,
+    R.drawable.wallpaper4,
+    R.drawable.wallpaper5,
+)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -97,16 +103,14 @@ fun SegmentedWallpaperScreen(
     viewModel: SegmentedWallpaperViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val pagerState = rememberPagerState(pageCount = { 5 })
-    var segmentationResults by rememberSaveable {
-        mutableStateOf<Map<Int, SegmentationResult>>(
-            emptyMap()
-        )
-    }
+    val pagerState = rememberPagerState(pageCount = { WALLPAPER_RES_IDS.size })
+
+    val currentSegmentationIndex = remember { mutableStateOf<Int?>(null) }
+    val currentSegmentationResult = remember { mutableStateOf<SegmentationResult?>(null) }
+
     val backgroundFillState by viewModel.uiState.collectAsState()
     val segmentationDataSource = remember { ImageSegmentationFactory.create(context) }
 
-    // Track current segmentation job to cancel when page changes
     val currentSegmentationJob = remember { mutableStateOf<Job?>(null) }
 
     LaunchedEffect(pagerState.currentPage) {
@@ -116,53 +120,59 @@ fun SegmentedWallpaperScreen(
         currentSegmentationJob.value?.cancel()
         currentSegmentationJob.value = null
 
+        // Clear previous segmentation result to free memory since we only keep one
+        currentSegmentationIndex.value = null
+        currentSegmentationResult.value = null
+
         viewModel.resetState()
 
         // Debounce: Wait 1000ms to see if user is still swiping
         delay(1000)
 
-        if (!segmentationResults.containsKey(currentPage)) {
-            val resourceId = context.getWallpaperResourceId(currentPage)
+        // Re-check — user might have changed page during debounce
+        if (pagerState.currentPage != currentPage) return@LaunchedEffect
 
-            if (resourceId != 0) {
-                currentSegmentationJob.value = launch {
-                    try {
-                        Log.d(LOG_TAG, "Starting segmentation for page $currentPage")
+        val resourceId = WALLPAPER_RES_IDS.getOrNull(currentPage) ?: 0
 
-                        val bitmap = withContext(Dispatchers.IO) {
-                            BitmapFactory.decodeResource(context.resources, resourceId)
+        if (resourceId != 0) {
+            currentSegmentationJob.value = launch {
+                try {
+                    Log.d(LOG_TAG, "Starting segmentation for page $currentPage")
+
+                    val bitmap = withContext(Dispatchers.IO) {
+                        BitmapFactory.decodeResource(context.resources, resourceId)
+                    }
+
+                    // Check if still active after loading bitmap
+                    if (!isActive) {
+                        Log.d(
+                            LOG_TAG,
+                            "Segmentation cancelled after bitmap load for page $currentPage"
+                        )
+                        return@launch
+                    }
+
+                    bitmap?.let {
+                        val result = withContext(Dispatchers.Default) {
+                            segmentationDataSource.segmentImage(it)
                         }
 
-                        // Check if still active after loading bitmap
-                        if (!isActive) {
+                        // Only save result if we're still on the same page
+                        if (isActive && pagerState.currentPage == currentPage) {
+                            currentSegmentationIndex.value = currentPage
+                            currentSegmentationResult.value = result
+                            Log.d(LOG_TAG, "Segmentation completed for page $currentPage")
+                        } else {
                             Log.d(
                                 LOG_TAG,
-                                "Segmentation cancelled after bitmap load for page $currentPage"
+                                "Segmentation discarded (page changed) for page $currentPage"
                             )
-                            return@launch
                         }
-
-                        bitmap?.let {
-                            val result = withContext(Dispatchers.Default) {
-                                segmentationDataSource.segmentImage(it)
-                            }
-
-                            // Only save result if we're still on the same page
-                            if (isActive && pagerState.currentPage == currentPage) {
-                                segmentationResults = segmentationResults + (currentPage to result)
-                                Log.d(LOG_TAG, "Segmentation completed for page $currentPage")
-                            } else {
-                                Log.d(
-                                    LOG_TAG,
-                                    "Segmentation discarded (page changed) for page $currentPage"
-                                )
-                            }
-                        }
-                    } catch (e: Exception) {
-                        Log.e(LOG_TAG, "Error during segmentation for page $currentPage", e)
-                    } finally {
-                        currentSegmentationJob.value = null
                     }
+                } catch (e: Exception) {
+                    Log.e(LOG_TAG, "Error during segmentation for page $currentPage", e)
+                } finally {
+                    currentSegmentationJob.value = null
                 }
             }
         }
@@ -177,19 +187,24 @@ fun SegmentedWallpaperScreen(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
+            val segmentationForPage = if (currentSegmentationIndex.value == page)
+                currentSegmentationResult.value
+            else
+                null
+
             WallpaperPageContent(
                 wallpaperIndex = page,
-                segmentationResult = segmentationResults[page],
+                segmentationResult = segmentationForPage,
                 currentPage = pagerState.currentPage,
                 backgroundFillState = if (page == pagerState.currentPage) backgroundFillState else null
             )
         }
 
-        val currentSegmentationResult = segmentationResults[pagerState.currentPage]
+        val currentSegmentationResultLocal = currentSegmentationResult.value
         val isLoading = backgroundFillState is BackgroundFillState.Loading
 
         AnimatedVisibility(
-            visible = currentSegmentationResult?.background != null,
+            visible = currentSegmentationResultLocal?.background != null,
             enter = fadeIn(),
             exit = fadeOut(),
             modifier = Modifier
@@ -214,7 +229,7 @@ fun SegmentedWallpaperScreen(
             Button(
                 onClick = {
                     viewModel.generativeFill(
-                        image = currentSegmentationResult?.background,
+                        image = currentSegmentationResultLocal?.background,
                         prompt = "Extend the given background image to fill transparent area. " +
                                 "Do not introduce any objects or identifiable forms. " +
                                 "No vehicles, people, animals, structures, shadows, or reflections. " +
@@ -265,8 +280,8 @@ fun WallpaperPageContent(
 ) {
     val context = LocalContext.current
     var clockOffset by remember { mutableStateOf(Offset.Zero) }
-    var textSize by remember { mutableStateOf(92f) }
-    var currentTime by remember { mutableStateOf(System.currentTimeMillis()) }
+    var textSize by remember { mutableFloatStateOf(92f) }
+    var currentTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
     var showFrontLayer by remember { mutableStateOf(true) }
     var gyroOffsetX by remember { mutableFloatStateOf(0f) }
     var gyroOffsetY by remember { mutableFloatStateOf(0f) }
@@ -320,7 +335,7 @@ fun WallpaperPageContent(
     val timeString = remember(currentTime) { timeFormat.format(Date(currentTime)) }
 
     val textMeasurer = rememberTextMeasurer()
-    var containerWidthPx by remember { mutableStateOf(0) }
+    var containerWidthPx by remember { mutableIntStateOf(0) }
 
     // Helper function to measure text width
     val measureTextWidth = remember(textMeasurer) {
@@ -408,7 +423,7 @@ fun WallpaperPageContent(
             } else {
                 Image(
                     painter = rememberAsyncImagePainter(
-                        context.getWallpaperResourceId(wallpaperIndex)
+                        WALLPAPER_RES_IDS.getOrNull(wallpaperIndex) ?: 0
                     ),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
