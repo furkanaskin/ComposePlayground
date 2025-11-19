@@ -54,6 +54,22 @@ Interactive selectable chips that explode with physics-based animations on swipe
 
 https://github.com/user-attachments/assets/797d71a1-b529-4c12-a4f1-61497643d20d
 
+### [Segmented Wallpaper](app/src/main/java/com/faskn/composeplayground/segmentedwallpaper/SegmentedWallpaperScreen.kt)
+
+ML Kit subject segmentation with AI-based background completion (Vertex AI / Gemini 2.0 Flash) to
+produce a depth animated wallpaper from a single image.
+
+https://github.com/user-attachments/assets/4ec70d5d-ed62-42e7-90b9-aa670dd3bbf7
+
+> For running this sample create
+> a [Firebase project](https://firebase.google.com/products/firebase-ai-logic) and
+> generate a `google-services.json` file.
+> Place the file in the app folder: `app/google-services.json`. Be sure to
+> enable [Vertex AI API](https://console.cloud.google.com/apis/library/aiplatform.googleapis.com).
+> Ensure to also enable [AppCheck](https://console.firebase.google.com/project/_/appcheck) on your
+> Firebase project to prevent API abuse.
+> For better results run this sample on a real device.
+
 ## Credits
 
 ### 3D Models
