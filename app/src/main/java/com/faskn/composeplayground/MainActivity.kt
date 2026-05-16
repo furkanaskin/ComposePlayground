@@ -9,10 +9,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.faskn.composeplayground.agsl.AGSLSampleScreen
@@ -21,6 +27,9 @@ import com.faskn.composeplayground.creditcard.CardCollapsingPagerScreen
 import com.faskn.composeplayground.explodablechips.ExplodableChipsScreen
 import com.faskn.composeplayground.home.HomePage
 import com.faskn.composeplayground.navigation.Screen
+import com.faskn.composeplayground.pathmorph.AchievementTransitionOverlay
+import com.faskn.composeplayground.pathmorph.VideoDetailStatsScreen
+import com.faskn.composeplayground.pathmorph.VideoStatsHomeScreen
 import com.faskn.composeplayground.product.view.ProductDetailScreen
 import com.faskn.composeplayground.product.view.ProductListScreen
 import com.faskn.composeplayground.segmentedwallpaper.SegmentedWallpaperScreen
@@ -63,6 +72,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PlaygroundApp() {
     val navController = rememberNavController()
+    var achievementScreenSpeedMultiplier by remember { mutableFloatStateOf(1f) }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         NavHost(
@@ -126,6 +136,39 @@ fun PlaygroundApp() {
             }
             composable(Screen.SegmentedWallpaper.route) {
                 SegmentedWallpaperScreen()
+            }
+
+            composable(Screen.PathMorphHome.route) {
+                VideoStatsHomeScreen(
+                    onNavigateToDetail = {
+                        navController.navigate(Screen.PathMorphDetail.route) {
+                            popUpTo(Screen.PathMorphHome.route) { inclusive = false }
+                        }
+                        navController.navigate(Screen.PathMorphTransition.route)
+                    }
+                )
+            }
+
+            composable(Screen.PathMorphDetail.route) {
+                VideoDetailStatsScreen { newSpeed ->
+                    achievementScreenSpeedMultiplier = newSpeed
+                    navController.popBackStack(Screen.PathMorphHome.route, inclusive = false)
+                }
+            }
+
+            dialog(
+                route = Screen.PathMorphTransition.route,
+                dialogProperties = DialogProperties(
+                    usePlatformDefaultWidth = false,
+                    decorFitsSystemWindows = false
+                )
+            ) {
+                AchievementTransitionOverlay(
+                    speedMultiplier = achievementScreenSpeedMultiplier,
+                    onTransitionComplete = {
+                        navController.popBackStack()
+                    }
+                )
             }
         }
     }

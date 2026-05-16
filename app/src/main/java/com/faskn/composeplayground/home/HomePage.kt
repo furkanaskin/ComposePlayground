@@ -89,6 +89,11 @@ fun HomePage(
             title = "Segmented Wallpaper",
             description = "Animated wallpaper sample with segmented images using MLKit and generative fill with Firebase AI.",
             screen = Screen.SegmentedWallpaper
+        ),
+        Tutorial(
+            title = "Path Morph + BlendMode DstOut Transition",
+            description = "Custom achievement celebration using path morphing and navigation transitions.",
+            screen = Screen.PathMorphHome
         )
     )
 

@@ -13,6 +13,9 @@ object Routes {
     const val EXPLODABLE_CHIPS = "explodable_chips"
     const val SHARED_ELEMENT_TOOLBAR_TRANSITION = "shared_element_toolbar_transition"
     const val SEGMENTED_WALLPAPER = "segmented_wallpaper"
+    const val PATH_MORPH_HOME = "path_morph_home"
+    const val PATH_MORPH_DETAIL = "path_morph_detail"
+    const val PATH_MORPH_TRANSITION = "path_morph_transition"
 }
 
 sealed class Screen(val route: String) {
@@ -30,4 +33,7 @@ sealed class Screen(val route: String) {
     data object ExplodableChips : Screen(Routes.EXPLODABLE_CHIPS)
     data object SharedElementToolbarTransition : Screen(Routes.SHARED_ELEMENT_TOOLBAR_TRANSITION)
     data object SegmentedWallpaper : Screen(Routes.SEGMENTED_WALLPAPER)
+    data object PathMorphHome : Screen(Routes.PATH_MORPH_HOME)
+    data object PathMorphDetail : Screen(Routes.PATH_MORPH_DETAIL)
+    data object PathMorphTransition : Screen(Routes.PATH_MORPH_TRANSITION)
 }

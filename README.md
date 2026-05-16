@@ -69,6 +69,12 @@ https://github.com/user-attachments/assets/4ec70d5d-ed62-42e7-90b9-aa670dd3bbf7
 > Ensure to also enable [AppCheck](https://console.firebase.google.com/project/_/appcheck) on your
 > Firebase project to prevent API abuse.
 > For better results run this sample on a real device.
+ 
+### [Achievement Transition](app/src/main/java/com/faskn/composeplayground/pathmorph)
+
+Interactive achievement unlocked transition with liquid rise, blob stroke, and icon burst animations. Inspired by [Strava's Save Activity](https://60fps.design/shots/strava-save-activity-morph-path-animation) animation.
+
+https://github.com/user-attachments/assets/ed1df1e0-1b5d-4d63-9122-40e5eb409b35
 
 ## Credits
 
