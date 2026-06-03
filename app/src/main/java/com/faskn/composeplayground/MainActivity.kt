@@ -36,6 +36,8 @@ import com.faskn.composeplayground.segmentedwallpaper.SegmentedWallpaperScreen
 import com.faskn.composeplayground.shadows.ShadowsScreen
 import com.faskn.composeplayground.sharedelement.SharedElementScreen
 import com.faskn.composeplayground.sidepanel.SidePanelScreen
+import com.faskn.composeplayground.telemetry.screen.analyse.TelemetryAnalyseScreen
+import com.faskn.composeplayground.telemetry.screen.versus.TelemetryVersusScreen
 import com.faskn.composeplayground.ui.theme.ComposePlaygroundTheme
 import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
@@ -147,6 +149,21 @@ fun PlaygroundApp() {
                         navController.navigate(Screen.PathMorphTransition.route)
                     }
                 )
+            }
+
+            composable(Screen.TelemetryVersus.route) {
+                TelemetryVersusScreen(
+                    onNavigateToAnalyse = {
+                        navController.navigate(Screen.TelemetryAnalyse.route) {
+                            popUpTo(Screen.TelemetryVersus.route) { inclusive = true }
+                        }
+                    },
+                    padding = innerPadding
+                )
+            }
+
+            composable(Screen.TelemetryAnalyse.route) {
+                TelemetryAnalyseScreen()
             }
 
             composable(Screen.PathMorphDetail.route) {

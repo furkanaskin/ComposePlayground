@@ -1,0 +1,266 @@
+{
+  "name": "Circuit de Spa-Francorchamps",
+  "trackId": "circuit de spa-francorchamps",
+  "country": "BE",
+  "length": 6981,
+  "pitentry": 0.97,
+  "pitexit": 0.03,
+  "turn": [
+    {
+      "number": 1,
+      "start": 0.03,
+      "marker": 0.04,
+      "end": 0.05,
+      "direction": 1,
+      "scale": 1,
+      "name": "La Source"
+    },
+    {
+      "number": 2,
+      "start": 0.06,
+      "marker": 0.08,
+      "end": 0.1,
+      "direction": 1,
+      "scale": 6
+    },
+    {
+      "number": 3,
+      "start": 0.13,
+      "marker": 0.13,
+      "end": 0.14,
+      "direction": 0,
+      "scale": 5,
+      "name": "Eau Rouge"
+    },
+    {
+      "number": 4,
+      "start": 0.14,
+      "marker": 0.15,
+      "end": 0.16,
+      "direction": 1,
+      "scale": 5
+    },
+    {
+      "number": 5,
+      "start": 0.16,
+      "marker": 0.17,
+      "end": 0.18,
+      "direction": 0,
+      "scale": 5,
+      "name": "Raidillon"
+    },
+    {
+      "number": 6,
+      "start": 0.2,
+      "marker": 0.21,
+      "end": 0.22,
+      "direction": 1,
+      "scale": 6
+    },
+    {
+      "number": 7,
+      "start": 0.32,
+      "marker": 0.33,
+      "end": 0.33,
+      "direction": 1,
+      "scale": 4,
+      "name": "Les Combes"
+    },
+    {
+      "number": 8,
+      "start": 0.33,
+      "marker": 0.34,
+      "end": 0.35,
+      "direction": 0,
+      "scale": 4
+    },
+    {
+      "number": 9,
+      "start": 0.35,
+      "marker": 0.36,
+      "end": 0.37,
+      "direction": 1,
+      "scale": 4
+    },
+    {
+      "number": 10,
+      "start": 0.4,
+      "marker": 0.42,
+      "end": 0.44,
+      "direction": 1,
+      "scale": 1,
+      "name": "Bruxelles"
+    },
+    {
+      "number": 11,
+      "start": 0.44,
+      "marker": 0.45,
+      "end": 0.46,
+      "direction": 0,
+      "scale": 4
+    },
+    {
+      "number": 12,
+      "start": 0.52,
+      "marker": 0.54,
+      "end": 0.58,
+      "direction": 0,
+      "scale": 4,
+      "name": "Pouhon"
+    },
+    {
+      "number": 13,
+      "start": 0.62,
+      "marker": 0.63,
+      "end": 0.64,
+      "direction": 1,
+      "scale": 4
+    },
+    {
+      "number": 14,
+      "start": 0.64,
+      "marker": 0.65,
+      "end": 0.66,
+      "direction": 0,
+      "scale": 4
+    },
+    {
+      "number": 15,
+      "start": 0.68,
+      "marker": 0.69,
+      "end": 0.7,
+      "direction": 1,
+      "scale": 3,
+      "name": "Campus"
+    },
+    {
+      "number": 16,
+      "start": 0.71,
+      "marker": 0.72,
+      "end": 0.73,
+      "direction": 1,
+      "scale": 4,
+      "name": "Stavelot"
+    },
+    {
+      "number": 17,
+      "start": 0.8,
+      "marker": 0.82,
+      "end": 0.84,
+      "direction": 0,
+      "scale": 1
+    },
+    {
+      "number": 18,
+      "start": 0.85,
+      "marker": 0.86,
+      "end": 0.88,
+      "direction": 0,
+      "scale": 5,
+      "name": "Blanchimont"
+    },
+    {
+      "number": 19,
+      "start": 0.94,
+      "marker": 0.95,
+      "end": 0.95,
+      "direction": 1,
+      "scale": 1,
+      "name": "Chicane"
+    },
+    {
+      "number": 20,
+      "start": 0.95,
+      "marker": 0.96,
+      "end": 0.96,
+      "direction": 0,
+      "scale": 1
+    }
+  ],
+  "straight": [
+    {
+      "name": "Main Straight",
+      "start": 0.96,
+      "end": 0.03
+    },
+    {
+      "name": "Kemmel Straight",
+      "start": 0.22,
+      "end": 0.32
+    }
+  ],
+  "sector": [
+    {
+      "name": "Sector 1",
+      "marker": 0.31
+    },
+    {
+      "name": "Sector 2",
+      "marker": 0.71
+    },
+    {
+      "name": "Sector 3",
+      "marker": 1.0
+    }
+  ],
+  "time": [
+    {
+      "gt3": [
+        {
+          "name": "dt",
+          "time": 23
+        },
+        {
+          "name": "sng10",
+          "time": 35
+        },
+        {
+          "name": "pit",
+          "time": 77
+        }
+      ],
+      "gte": [
+        {
+          "name": "dt",
+          "time": 23
+        },
+        {
+          "name": "sng10",
+          "time": 35
+        },
+        {
+          "name": "pit",
+          "time": 69
+        }
+      ],
+      "lmp2": [
+        {
+          "name": "dt",
+          "time": 23
+        },
+        {
+          "name": "sng10",
+          "time": 35
+        },
+        {
+          "name": "pit",
+          "time": 81
+        }
+      ],
+      "hyper": [
+        {
+          "name": "dt",
+          "time": 23
+        },
+        {
+          "name": "sng10",
+          "time": 35
+        },
+        {
+          "name": "pit",
+          "time": 78
+        }
+      ]
+    }
+  ]
+}

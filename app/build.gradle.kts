@@ -2,12 +2,24 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.google.services) apply false
 }
 
 android {
     namespace = "com.faskn.composeplayground"
     compileSdk = 36
+
+    configurations.all {
+        resolutionStrategy {
+            eachDependency {
+                if (requested.group == "io.ktor") {
+                    useVersion("2.3.12")
+                }
+            }
+        }
+    }
 
     defaultConfig {
         applicationId = "com.faskn.composeplayground"
@@ -61,7 +73,11 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
     implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.sceneview)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
@@ -69,6 +85,8 @@ dependencies {
     implementation(libs.play.services.mlkit.subject.segmentation)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.ai)
+    implementation(libs.generativeai)
+
     implementation(libs.firebase.app.check)
     implementation(libs.firebase.app.check.debug)
     testImplementation(libs.junit)

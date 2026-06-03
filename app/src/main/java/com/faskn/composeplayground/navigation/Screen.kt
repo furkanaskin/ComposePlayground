@@ -16,6 +16,8 @@ object Routes {
     const val PATH_MORPH_HOME = "path_morph_home"
     const val PATH_MORPH_DETAIL = "path_morph_detail"
     const val PATH_MORPH_TRANSITION = "path_morph_transition"
+    const val GT3_TELEMETRY_VERSUS = "gt3_telemetry_versus"
+    const val GT3_TELEMETRY_ANALYSE = "gt3_telemetry_analyse"
 }
 
 sealed class Screen(val route: String) {
@@ -36,4 +38,6 @@ sealed class Screen(val route: String) {
     data object PathMorphHome : Screen(Routes.PATH_MORPH_HOME)
     data object PathMorphDetail : Screen(Routes.PATH_MORPH_DETAIL)
     data object PathMorphTransition : Screen(Routes.PATH_MORPH_TRANSITION)
+    data object TelemetryVersus : Screen(Routes.GT3_TELEMETRY_VERSUS)
+    data object TelemetryAnalyse : Screen(Routes.GT3_TELEMETRY_ANALYSE)
 }
