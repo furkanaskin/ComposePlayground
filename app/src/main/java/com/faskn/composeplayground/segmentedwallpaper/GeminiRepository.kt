@@ -20,7 +20,7 @@ class GeminiRepository {
             // Initialize Vertex AI with image generation model
             // The model will generate images based on input dimensions
             val generativeModel = Firebase.ai(backend = GenerativeBackend.vertexAI())
-                .generativeModel(modelName = "gemini-2.0-flash-preview-image-generation")
+                .generativeModel(modelName = "gemini-2.5-flash-preview-image-generation")
 
             // Create content with image and prompt
             // Request output at same dimensions as input

@@ -32,6 +32,7 @@ import com.faskn.composeplayground.telemetry.data.TrackTurn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 class TelemetryProcessor(private val context: Context) {
@@ -281,25 +282,35 @@ class TelemetryProcessor(private val context: Context) {
         frames: List<TelemetryFrame>,
         rivalBestSectors: Triple<Float, Float, Float>?
     ): LapSectorResult = withContext(Dispatchers.IO) {
-        val bestLaps = dao.getBestLapTimes()
-        val currentLaps = dao.getCurrentLapTimes()
-        val lastS1 = dao.getLastSector1Values()
-        val lastS2 = dao.getLastSector2Values()
+        val bestLapsMap = dao.getBestLapTimes().associateBy { (it.ts * 10).roundToInt() }
+        val currentLapsMap = dao.getCurrentLapTimes().associateBy { (it.ts * 10).roundToInt() }
+        val lastS1Map = dao.getLastSector1Values().associateBy { (it.ts * 10).roundToInt() }
+        val lastS2Map = dao.getLastSector2Values().associateBy { (it.ts * 10).roundToInt() }
 
         val lapTimesMap = mutableMapOf<Int, Float>()
         val bestTimesMap = mutableMapOf<Int, Float>()
 
         val lapSectorTimes = lapEntities.mapNotNull { lap ->
             val lapEnd = frames.findLast { it.lap == lap.lapNumber }?.timeSeconds ?: 0f
-            val lapTime = currentLaps.find { abs(it.ts - lapEnd) < 0.1f }?.value ?: 0f
-            val bestTime = bestLaps.find { abs(it.ts - lapEnd) < 0.1f }?.value ?: 0f
+            val lapEndKey = (lapEnd * 10).roundToInt()
+
+            val lapTime = currentLapsMap[lapEndKey]?.value ?: 
+                          currentLapsMap[lapEndKey - 1]?.value ?: 
+                          currentLapsMap[lapEndKey + 1]?.value ?: 0f
+            val bestTime = bestLapsMap[lapEndKey]?.value ?: 
+                           bestLapsMap[lapEndKey - 1]?.value ?: 
+                           bestLapsMap[lapEndKey + 1]?.value ?: 0f
 
             lapTimesMap[lap.lapNumber] = lapTime
             bestTimesMap[lap.lapNumber] = bestTime
 
             if (lapTime > 0) {
-                val s1 = lastS1.find { abs(it.ts - lapEnd) < 0.1f }?.value ?: 0f
-                val s12 = lastS2.find { abs(it.ts - lapEnd) < 0.1f }?.value ?: 0f
+                val s1 = lastS1Map[lapEndKey]?.value ?: 
+                         lastS1Map[lapEndKey - 1]?.value ?: 
+                         lastS1Map[lapEndKey + 1]?.value ?: 0f
+                val s12 = lastS2Map[lapEndKey]?.value ?: 
+                          lastS2Map[lapEndKey - 1]?.value ?: 
+                          lastS2Map[lapEndKey + 1]?.value ?: 0f
                 if (s1 > 0 && s12 > 0) {
                     return@mapNotNull lap.lapNumber to Triple(
                         s1,
