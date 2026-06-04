@@ -82,7 +82,7 @@ Real-time telemetry analysis with Gemini AI integration to provide race engineer
 
 https://github.com/user-attachments/assets/49a30f09-0ecf-4715-acf2-d81dbf56b382
 
-> **Note:** For Gemini AI to function, you need to generate an API key from [aistudio.google.com](https://aistudio.google.com) and update the "YOUR_KEY_HERE" placeholder in `RaceEngineerAgent.kt`.
+> **Note:** For Gemini AI to function, you need to generate an API key from [aistudio.google.com](https://aistudio.google.com/api-keys) and update the "YOUR_KEY_HERE" placeholder in `RaceEngineerAgent.kt`.
 
 ## Credits
 
@@ -91,22 +91,27 @@ https://github.com/user-attachments/assets/49a30f09-0ecf-4715-acf2-d81dbf56b382
 The following 3D models are used under Creative Commons Attribution license:
 
 - **Xbox Wireless Controller (White)** by Chistodrako._  
+
   Source: [Sketchfab](https://skfb.ly/o6Kox)  
   License: [Creative Commons Attribution](http://creativecommons.org/licenses/by/4.0/)
 
 - **Xbox Wireless Controller (Black)** by Chistodrako._  
+
   Source: [Sketchfab](https://skfb.ly/o6Kou)  
   License: [Creative Commons Attribution](http://creativecommons.org/licenses/by/4.0/)
 
 ### GT3 Car Liveries
 
-- **AO Racing "Roxy -Sketchy" - LED Panel - LED Panel** by Gazgub HUB  
+- **AO Racing "Roxy -Sketchy" - LED Panel** by Gazgub HUB  
+
   Source: [RaceControl.gg](https://www.racecontrol.gg/liveries/445018)
 
 - **Grello Special livery - 24Hrs Nürburgring 2026 - Porsche** by Gazgub HUB
+
   Source: [RaceControl.gg](https://www.racecontrol.gg/liveries/475564)
 
 ### Spa - Track Data
 
 - **Lovely Sim Racing Track Data**  
+
   Source: [GitHub](https://github.com/Lovely-Sim-Racing/lovely-track-data)
