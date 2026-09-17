@@ -99,6 +99,11 @@ fun HomePage(
             title = "GT3 Telemetry Analyser",
             description = "Side by side telemetry analyser, powered with AI Race Engineer in Le Mans Ultimate.",
             screen = Screen.TelemetryVersus
+        ),
+        Tutorial(
+            title = "Calendar Grid",
+            description = "7-day calendar with draggable events, stacked cells, spring-based animations and progressive blur.",
+            screen = Screen.CalendarGrid
         )
     )
 

@@ -22,6 +22,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.faskn.composeplayground.agsl.AGSLSampleScreen
+import com.faskn.composeplayground.calendar.CalendarGridScreen
 import com.faskn.composeplayground.carousel.CircularCarouselScreen
 import com.faskn.composeplayground.creditcard.CardCollapsingPagerScreen
 import com.faskn.composeplayground.explodablechips.ExplodableChipsScreen
@@ -164,6 +165,9 @@ fun PlaygroundApp() {
 
             composable(Screen.TelemetryAnalyse.route) {
                 TelemetryAnalyseScreen()
+            }
+            composable(Screen.CalendarGrid.route) {
+                CalendarGridScreen(padding = innerPadding)
             }
 
             composable(Screen.PathMorphDetail.route) {

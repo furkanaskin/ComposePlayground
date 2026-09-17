@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.nativePaint
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -410,7 +411,7 @@ private fun DrawScope.drawRainbowCircles(
             drawIntoCanvas { canvas ->
                 val paint = Paint().apply {
                     this.color = color
-                    this.asFrameworkPaint().maskFilter =
+                    this.nativePaint.maskFilter =
                         BlurMaskFilter(BLUR_RADIUS, BlurMaskFilter.Blur.INNER)
                 }
                 canvas.drawCircle(Offset(centerX, centerY), circleRadius, paint)

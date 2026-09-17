@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
@@ -9,22 +8,16 @@ plugins {
 
 android {
     namespace = "com.faskn.composeplayground"
-    compileSdk = 36
-
-    configurations.all {
-        resolutionStrategy {
-            eachDependency {
-                if (requested.group == "io.ktor") {
-                    useVersion("2.3.12")
-                }
-            }
+    compileSdk {
+        version = release(37) {
+            minorApiLevel = 1
         }
     }
 
     defaultConfig {
         applicationId = "com.faskn.composeplayground"
         minSdk = 27
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -33,24 +26,18 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlin {
-        jvmToolchain(17)
-    }
-
-    composeCompiler {
-        reportsDestination = layout.buildDirectory.dir("compose_metrics")
-        metricsDestination = layout.buildDirectory.dir("compose_metrics")
     }
 
     buildFeatures {
@@ -58,7 +45,24 @@ android {
     }
 }
 
+composeCompiler {
+    if (project.hasProperty("enableComposeCompilerReports")) {
+        reportsDestination = layout.buildDirectory.dir("compose_metrics")
+        metricsDestination = layout.buildDirectory.dir("compose_metrics")
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
+    // Dependency constraints to resolve Ktor conflicts efficiently
+    constraints {
+        implementation("io.ktor:ktor-client-core:2.3.12") {
+            because("Forcing a stable Ktor version to resolve transitive conflicts")
+        }
+    }
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -73,6 +77,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.foundation)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
