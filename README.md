@@ -84,6 +84,12 @@ https://github.com/user-attachments/assets/49a30f09-0ecf-4715-acf2-d81dbf56b382
 
 > **Note:** For Gemini AI to function, you need to generate an API key from [aistudio.google.com](https://aistudio.google.com/api-keys) and update the "YOUR_KEY_HERE" placeholder in `RaceEngineerAgent.kt`.
 
+### [Interactive Calendar Grid](app/src/main/java/com/faskn/composeplayground/calendar)
+
+Interactive calendar grid featuring fluid drag-and-drop gestures, spring physics, blur with `BlurRadiusSpec`, and fan-out stack reveals for overlapping events. Inspired by [artntek's design](https://x.com/artntek/status/2092361432251703541).
+
+https://github.com/user-attachments/assets/e85eeb1f-d475-4418-a374-1a8589749fd0
+
 ## Credits
 
 ### 3D Models
