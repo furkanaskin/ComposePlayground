@@ -19,6 +19,7 @@ object Routes {
     const val GT3_TELEMETRY_VERSUS = "gt3_telemetry_versus"
     const val GT3_TELEMETRY_ANALYSE = "gt3_telemetry_analyse"
     const val CALENDAR_GRID = "calendar_grid"
+    const val BOTTOM_BAR_MORPH = "bottom_bar_morph"
 }
 
 sealed class Screen(val route: String) {
@@ -42,4 +43,5 @@ sealed class Screen(val route: String) {
     data object TelemetryVersus : Screen(Routes.GT3_TELEMETRY_VERSUS)
     data object TelemetryAnalyse : Screen(Routes.GT3_TELEMETRY_ANALYSE)
     data object CalendarGrid : Screen(Routes.CALENDAR_GRID)
+    data object BottomBarMorph : Screen(Routes.BOTTOM_BAR_MORPH)
 }

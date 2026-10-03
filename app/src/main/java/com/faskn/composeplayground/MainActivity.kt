@@ -37,6 +37,7 @@ import com.faskn.composeplayground.segmentedwallpaper.SegmentedWallpaperScreen
 import com.faskn.composeplayground.shadows.ShadowsScreen
 import com.faskn.composeplayground.sharedelement.SharedElementScreen
 import com.faskn.composeplayground.sidepanel.SidePanelScreen
+import com.faskn.composeplayground.bottombarmorph.BottomBarMorphScreen
 import com.faskn.composeplayground.telemetry.screen.analyse.TelemetryAnalyseScreen
 import com.faskn.composeplayground.telemetry.screen.versus.TelemetryVersusScreen
 import com.faskn.composeplayground.ui.theme.ComposePlaygroundTheme
@@ -168,6 +169,9 @@ fun PlaygroundApp() {
             }
             composable(Screen.CalendarGrid.route) {
                 CalendarGridScreen(padding = innerPadding)
+            }
+            composable(Screen.BottomBarMorph.route) {
+                BottomBarMorphScreen(padding = innerPadding)
             }
 
             composable(Screen.PathMorphDetail.route) {

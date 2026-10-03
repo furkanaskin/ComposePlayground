@@ -104,6 +104,11 @@ fun HomePage(
             title = "Calendar Grid",
             description = "7-day calendar with draggable events, stacked cells, spring-based animations and progressive blur.",
             screen = Screen.CalendarGrid
+        ),
+        Tutorial(
+            title = "Bottom Bar Morph Transition",
+            description = "Expandable bottom bar morphing into quick transfer panel",
+            screen = Screen.BottomBarMorph
         )
     )
 
