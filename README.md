@@ -90,6 +90,12 @@ Interactive calendar grid featuring fluid drag-and-drop gestures, spring physics
 
 https://github.com/user-attachments/assets/e85eeb1f-d475-4418-a374-1a8589749fd0
 
+### [Bottom Bar Morph](app/src/main/java/com/faskn/composeplayground/bottombarmorph)
+
+Expandable bottom navigation bar morphing into a another composable, featuring `SubcomposeLayout` for dynamic size measurement, progressive blur transitions, spring physics, and animated mesh gradients.
+
+https://github.com/user-attachments/assets/be762991-dae6-4d82-8487-4e149b736da4
+
 ## Credits
 
 ### 3D Models
