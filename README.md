@@ -96,7 +96,7 @@ Expandable bottom navigation bar morphing into a another composable, featuring `
 
 https://github.com/user-attachments/assets/be762991-dae6-4d82-8487-4e149b736da4
 
-### [Trading Card Pack Opening](app/src/main/java/com/faskn/composeplayground/packopening/TradingCardPackScreen.kt)
+### [Trading Card Pack Opening](app/src/main/java/com/faskn/composeplayground/packopening)
 
 Interactive trading card booster pack opening simulation featuring AGSL shaders (puffy packaging, zip glow, scene smoke, and holographic foil sheen), zipper tear gesture, peel strip curl physics, and 3D tilt card inspection.
 
