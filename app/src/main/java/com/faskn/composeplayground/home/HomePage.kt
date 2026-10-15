@@ -109,6 +109,11 @@ fun HomePage(
             title = "Bottom Bar Morph Transition",
             description = "Expandable bottom bar morphing into quick transfer panel",
             screen = Screen.BottomBarMorph
+        ),
+        Tutorial(
+            title = "Trading Card Pack Opening - AGSL",
+            description = "Trading card booster pack opening simulation with interactive tear gesture, 3D tilt collectible cards, and holographic foil effects.",
+            screen = Screen.PackOpening
         )
     )
 

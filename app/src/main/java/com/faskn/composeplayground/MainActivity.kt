@@ -38,6 +38,7 @@ import com.faskn.composeplayground.shadows.ShadowsScreen
 import com.faskn.composeplayground.sharedelement.SharedElementScreen
 import com.faskn.composeplayground.sidepanel.SidePanelScreen
 import com.faskn.composeplayground.bottombarmorph.BottomBarMorphScreen
+import com.faskn.composeplayground.packopening.TradingCardPackScreen
 import com.faskn.composeplayground.telemetry.screen.analyse.TelemetryAnalyseScreen
 import com.faskn.composeplayground.telemetry.screen.versus.TelemetryVersusScreen
 import com.faskn.composeplayground.ui.theme.ComposePlaygroundTheme
@@ -172,6 +173,9 @@ fun PlaygroundApp() {
             }
             composable(Screen.BottomBarMorph.route) {
                 BottomBarMorphScreen(padding = innerPadding)
+            }
+            composable(Screen.PackOpening.route) {
+                TradingCardPackScreen(padding = innerPadding)
             }
 
             composable(Screen.PathMorphDetail.route) {
